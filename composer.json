@@ -1,0 +1,37 @@
+{
+    "name": "vnnit/core",
+    "type": "library",
+    "description": "Vnnit library core",
+    "authors": [
+        {
+            "name": "hthang369",
+            "email": "thangtran3690@gmail.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "laravelcollective/html": "^6.2",
+        "jenssegers/agent": "^2.6",
+        "intervention/image": "^2.6",
+        "nwidart/laravel-menus": "^7.0",
+        "nwidart/laravel-modules": "^8.2"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "psr-4": {
+            "Vnnit\\Core\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Vnnit\\Core\\VnnitCoreServiceProvider"
+            ]
+        }
+    }
+}
