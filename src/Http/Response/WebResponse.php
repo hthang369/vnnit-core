@@ -1,12 +1,12 @@
 <?php
-namespace Vnnit\Core\Responses;
+namespace Vnnit\Core\Http\Response;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Response;
 
 /**
  * Class WebResponse
- * @package App\Core\Http\Response
+ * @package Vnnit\Core\Http\Response
  */
 class WebResponse
 {
@@ -18,23 +18,23 @@ class WebResponse
     public static function success($viewName, $data, $message = null)
     {
         if ($message === null) {
-            $message = trans('response.success');
+            $message = translate('response.success');
         }
         return static::makeResponse($viewName, true, Response::HTTP_OK, $message, $data);
     }
 
-    public static function error($routeName, $message, int $code = Response::HTTP_FOUND)
+    public static function error($routeName, $errors, $message = null, int $code = Response::HTTP_FOUND)
     {
         if ($message === null) {
-            $message = trans('response.error');
+            $message = translate('response.error');
         }
-        return static::makeRedirect($routeName, false, $code, $message);
+        return static::makeRedirect($routeName, false, $code, $message, null, $errors);
     }
 
-    public static function exception($routeName, $message, $errors = [], int $code = Response::HTTP_FOUND, array $headers = [])
+    public static function exception($routeName, $errors = [], $message = null, int $code = Response::HTTP_FOUND, array $headers = [])
     {
         if ($message === null) {
-            $message = trans('response.exception');
+            $message = translate('response.exception');
         }
         return static::makeRedirect($routeName, false, $code, $message, null, $errors, $headers);
     }
@@ -42,7 +42,7 @@ class WebResponse
     public static function created($viewName, $data, $message = null)
     {
         if ($message === null) {
-            $message = trans('response.created');
+            $message = translate('response.created');
         }
         return static::makeRedirect($viewName, true, Response::HTTP_FOUND, $message, $data);
     }
@@ -50,7 +50,7 @@ class WebResponse
     public static function updated($viewName, $data, $message = null)
     {
         if ($message === null) {
-            $message = trans('response.updated');
+            $message = translate('response.updated');
         }
         return static::makeRedirect($viewName, true, Response::HTTP_FOUND, $message, $data);
     }
@@ -58,17 +58,34 @@ class WebResponse
     public static function deleted($viewName, $message = null)
     {
         if ($message === null) {
-            $message = trans('response.deleted');
+            $message = translate('response.deleted');
         }
         return static::makeRedirect($viewName, true, Response::HTTP_FOUND, $message);
     }
 
-    public static function validateFail($routeName, array $errors, $message = null)
+    public static function downloaded($viewName, $message = null)
     {
         if ($message === null) {
-            $message = trans('response.validation_fail');
+            $message = translate('response.downloaded');
         }
-        return static::makeResponseError($routeName, Response::HTTP_UNPROCESSABLE_ENTITY, $message, $errors);
+        return static::makeRedirect($viewName, true, Response::HTTP_FOUND, $message);
+    }
+
+    public static function uploaded($viewName, $message = null)
+    {
+        if ($message === null) {
+            $message = translate('response.uploaded');
+        }
+        return static::makeRedirect($viewName, true, Response::HTTP_FOUND, $message);
+    }
+
+    public static function validateFail($routeName, $errors, $message = null)
+    {
+        if ($message === null) {
+            $message = translate('response.validation_fail');
+        }
+        $errors = $errors instanceof Arrayable ? $errors->toArray() : $errors;
+        return static::makeResponseError($routeName, Response::HTTP_FOUND, $errors, $message);
     }
 
     protected static function makeResponse(string $viewName, bool $success, int $code, string $message, $data = null, array $errors = [], array $headers = [])
@@ -92,11 +109,15 @@ class WebResponse
             'errors'  => $errors
         ];
 
-        return redirect()->intended($routeName, $code, $headers)->with($content);
+        return redirect()->intended($routeName, $code, $headers)->with($content)->withInput();
     }
 
-    protected static function makeResponseError(string $routeName, int $code, array $errors = [], array $headers = [])
+    protected static function makeResponseError(string $routeName, int $code, array $errors = [], string $message = '', array $headers = [])
     {
-        return redirect()->intended($routeName, $code, $headers)->withInput()->withErrors($errors);
+        $content = [
+            'success' => false,
+            'message' => $message
+        ];
+        return redirect()->intended($routeName, $code, $headers)->with($content)->withInput()->withErrors($errors);
     }
 }

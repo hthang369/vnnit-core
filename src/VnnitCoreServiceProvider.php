@@ -4,30 +4,35 @@ namespace Vnnit\Core;
 
 use Collective\Html\FormFacade as Form;
 use Illuminate\Support\Facades\Blade;
-use Vnnit\Core\Providers\BaseServiceProvider;
+use Vnnit\Core\Support\CommonHelper;
+use Vnnit\Core\Support\FileManagementService;
 
 class VnnitCoreServiceProvider extends BaseServiceProvider
 {
+    protected $facades = [
+        'file-management' => FileManagementService::class,
+        'common-helper' => CommonHelper::class
+    ];
+
     public function boot()
     {
-        
-        // $prefix = config('laka-core.prefix');
+        $prefix = config('vnnit-core.prefix');
 
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', $prefix);
+        $this->loadViewsFrom(__DIR__.'/../resources/views', $prefix);
 
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', $prefix);
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', $prefix);
 
-        // $this->registerBladeComponents();
+        $this->registerBladeComponents();
 
-        // $this->registerFormComponents();
+        $this->registerFormComponents();
 
-        // $this->loadHelperFile();
+        $this->loadHelperFile();
 
-        // if ($this->app->runningInConsole()) {
-        //     $this->publishes([
-        //         __DIR__ . '/../../config/config.php' => config_path('laka-core.php'),
-        //     ], 'config');
-        // }
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../../config/config.php' => config_path('vnnit-core.php'),
+            ], 'config');
+        }
     }
 
     private function loadHelperFile()
@@ -37,12 +42,14 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
 
     public function register()
     {
-        // $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'laka-core');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'vnnit-core');
+        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
+        parent::register();
     }
 
     protected function registerBladeComponents()
     {
-        collect(config('laka-core.components'))->each(function($item, $alias) {
+        collect(config('vnnit-core.components'))->each(function($item, $alias) {
             Blade::component($alias, $item['class']);
         });
 
@@ -53,7 +60,7 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
 
     protected function registerFormComponents()
     {
-        collect(config('laka-core.form-components'))->each(function($item, $alias) {
+        collect(config('vnnit-core.bt-components'))->each(function($item, $alias) {
             Form::component($alias, $item['view'], $item['params']);
         });
     }

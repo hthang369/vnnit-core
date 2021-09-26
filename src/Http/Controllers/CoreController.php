@@ -4,14 +4,13 @@ namespace Vnnit\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Kris\LaravelFormBuilder\FormBuilder;
-use Vnnit\Core\Repositories\BaseRepository;
 use Vnnit\Core\Validators\BaseValidator;
+use Leantony\Grid\Grid;
+use Vnnit\Core\Repositories\BaseRepository;
 use Vnnit\Core\Responses\BaseResponse;
 
 class CoreController extends BaseController
 {
-    private $defaultView;
-    private $pathView;
     private $routeName;
     protected $formBuilder;
 
@@ -23,12 +22,12 @@ class CoreController extends BaseController
 
     public function setDefaultView($value)
     {
-        $this->defaultView = $value;
+        $this->defaultName = $value;
     }
 
     public function setPathView($value)
     {
-        $this->pathView = $value;
+        $this->setViewName($value);
     }
 
     public function setRouteName($value)
@@ -38,13 +37,15 @@ class CoreController extends BaseController
 
     public function renderView($dataGrid, $viewName, $customName = null, $data = [])
     {
-        $defaultName = $customName ?? data_get($this->pathView, $viewName, $this->defaultView . '.' . $viewName);
-        return $dataGrid->renderOn($defaultName, $data);
+        $defaultName = $customName ?? $this->getViewName($viewName);
+        // if ($dataGrid instanceof Grid)
+            return $dataGrid->renderOn($defaultName, $data);
+        // return parent::responseView(request(), $data, $defaultName);
     }
 
     public function renderViewData($data, $viewName, $customName = null)
     {
-        $defaultName = $customName ?? data_get($this->pathView, $viewName, $this->defaultView . '.' . $viewName);
+        $defaultName = $customName ?? $this->getViewName($viewName);
         return view($defaultName, $data)->render();
     }
 
@@ -54,9 +55,6 @@ class CoreController extends BaseController
      */
     public function index()
     {
-        foreach ($this->defaultCriteria as $criteria) {
-            $this->repository->pushCriteria($criteria);
-        }
         $bases = $this->repository->allDataGrid();
         return $this->renderView($bases, __FUNCTION__);
     }

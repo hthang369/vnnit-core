@@ -1,6 +1,6 @@
 <?php
 
-namespace Vnnit\Core\Providers;
+namespace Vnnit\Core;
 
 use Illuminate\Support\ServiceProvider;
 
