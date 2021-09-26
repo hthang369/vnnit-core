@@ -38,7 +38,7 @@ class Card extends Component
         $imgBottom = false
     )
     {
-        $this->prefix = config('laka-core.prefix');
+        $this->prefix = config('vnnit-core.prefix');
         $this->header = $header;
         $this->title = $title;
         $this->footer = $footer;

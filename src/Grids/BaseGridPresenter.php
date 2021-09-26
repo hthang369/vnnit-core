@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Presenters;
+namespace Vnnit\Core\Grids;
 
-use App\Facades\Common;
-use Laka\Core\Helpers\Classes;
-use Laka\Core\Presenters\BaseDataGridPresenter;
-use Laka\Core\Traits\HasDataColumn;
+use Illuminate\Contracts\Support\Htmlable;
+use Vnnit\Core\Helpers\Classes;
+use Vnnit\Core\Presenters\BaseDataGridPresenter;
+use Vnnit\Core\Traits\ConfiguresGrid;
+use Vnnit\Core\Traits\HasDataColumn;
+use Vnnit\Core\Traits\RendersGrid;
 
-abstract class BaseGridPresenter extends BaseDataGridPresenter
+abstract class BaseGridPresenter extends BaseDataGridPresenter implements Htmlable
 {
-    use HasDataColumn;
+    use HasDataColumn, ConfiguresGrid, RendersGrid;
 
     private $indexName = 'index';
 

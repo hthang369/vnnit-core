@@ -20,14 +20,14 @@ class LakaPagination extends LengthAwarePaginator
         }
 
         $this->setDefaultView();
-        $this->onEachSide(config('laka-core.pagination.onEachPage'));
+        $this->onEachSide(config('vnnit-core.pagination.onEachPage'));
     }
 
     public function setDefaultView($viewName = null)
     {
         if (blank($viewName)) {
-            $prefix = config('laka-core.prefix');
-            $defaultName = config('laka-core.components.pagination.view');
+            $prefix = config('vnnit-core.prefix');
+            $defaultName = config('vnnit-core.components.pagination.view');
             $viewName = "{$prefix}::{$defaultName}";
         }
         static::defaultView($viewName);

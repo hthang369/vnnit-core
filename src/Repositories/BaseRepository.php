@@ -66,8 +66,13 @@ abstract class BaseRepository implements RepositoryInterface
     public function __construct()
     {
         $this->makeModel();
+        $this->boot();
         $this->bootTraits();
         $this->initializeTraits();
+    }
+
+    protected function boot()
+    {
     }
 
     protected function bootTraits()

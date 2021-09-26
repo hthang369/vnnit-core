@@ -8,7 +8,3 @@
     :fields="data_get($data, 'fields')">
 </x-table>
 
-@if (!blank($paginator))
-{!! $paginator->links() !!}
-@endif
-

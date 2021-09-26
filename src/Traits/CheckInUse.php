@@ -1,6 +1,6 @@
 <?php
 
-namespace Vnnit\Core\Models\Concerns;
+namespace Vnnit\Core\Traits;
 
 use Illuminate\Support\Facades\DB;
 

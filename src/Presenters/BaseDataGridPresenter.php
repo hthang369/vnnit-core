@@ -35,7 +35,7 @@ abstract class BaseDataGridPresenter implements PresenterInterface
 
     private function getActionOptions()
     {
-        $prefix = config('laka-core.prefix');
+        $prefix = config('vnnit-core.prefix');
         return array_merge(['sortable' => false, 'cell' => "$prefix::tables.buttons.action", 'dataType' => 'buttons'], $this->actionColumnOptions);
     }
 
@@ -143,13 +143,4 @@ abstract class BaseDataGridPresenter implements PresenterInterface
         ]);
     }
 
-    public function render()
-    {
-        $prefix = config('laka-core.prefix');
-        return view("{$prefix}::data-grid", [
-            'sectionCode' => $this->getSectionCode(),
-            'data' => $this->resultData,
-            'paginator' => $this->paginator
-        ])->render();
-    }
 }

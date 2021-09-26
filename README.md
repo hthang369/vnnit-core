@@ -1,1 +1,1 @@
-# laka-core
+# vnnit-core

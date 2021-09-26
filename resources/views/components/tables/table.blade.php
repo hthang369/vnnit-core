@@ -16,7 +16,7 @@
                     @if ($field->filtering || str_is($field->dataType, 'buttons'))
                         <x-table-filter class="p-1" :field="$field" />
                     @else
-                        <x-table-column :field="new Laka\Core\Helpers\DataColumn" />
+                        <x-table-column :field="new Vnnit\Core\Helpers\DataColumn" />
                     @endif
                 @endforeach
             </x-table-row>
@@ -38,9 +38,9 @@
                 </x-table-row>
             @empty
                 @php
-                    $field = new Laka\Core\Helpers\DataColumn;
+                    $field = new Vnnit\Core\Helpers\DataColumn;
                     $field->tdAttr = ['colspan' => count($fields)];
-                    $prefix = config('laka-core.prefix');
+                    $prefix = config('vnnit-core.prefix');
                 @endphp
                 <x-table-row>
                     <x-table-column :field="$field">

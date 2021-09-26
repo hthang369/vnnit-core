@@ -52,7 +52,7 @@ class Pagination extends Component
         $this->total = $total ?: 0;
         $this->pages = $pages ?: 0;
         $this->except = $except ?: [];
-        $this->limit = $limit ?? config('laka-core.pagination.perPage');
+        $this->limit = $limit ?? config('vnnit-core.pagination.perPage');
         $this->next = $next ?: '';
         $this->prev = $prev ?: '';
         $this->attrs['class'] = Classes::get([

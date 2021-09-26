@@ -14,8 +14,8 @@ class UrlPaginator extends UrlWindow
     public function get()
     {
         $onEachSide = $this->paginator->onEachSide;
-        $numberFirstPage = config('laka-core.pagination.numberFirstPage');
-        $numberLastPage = config('laka-core.pagination.numberLastPage');
+        $numberFirstPage = config('vnnit-core.pagination.numberFirstPage');
+        $numberLastPage = config('vnnit-core.pagination.numberLastPage');
 
         $this->numberOfPages = ($onEachSide * 2) + $numberFirstPage + $numberLastPage + 1;
 
@@ -67,7 +67,7 @@ class UrlPaginator extends UrlWindow
      */
     public function getStart()
     {
-        $numberPrevPage = config('laka-core.pagination.numberFirstPage');
+        $numberPrevPage = config('vnnit-core.pagination.numberFirstPage');
         return $this->paginator->getUrlRange(1, $numberPrevPage);
     }
 
@@ -78,7 +78,7 @@ class UrlPaginator extends UrlWindow
      */
     public function getFinish()
     {
-        $numberNextPage = config('laka-core.pagination.numberFirstPage') - 1;
+        $numberNextPage = config('vnnit-core.pagination.numberFirstPage') - 1;
         return $this->paginator->getUrlRange(
             $this->lastPage() - $numberNextPage,
             $this->lastPage()

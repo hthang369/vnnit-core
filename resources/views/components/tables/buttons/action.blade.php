@@ -1,4 +1,4 @@
-@props(['data', 'prefix' => config('laka-core.prefix')])
+@props(['data', 'prefix' => config('vnnit-core.prefix')])
 <div>
     @foreach ($data['action'] as $item)
         @continue(!$item['visible'])

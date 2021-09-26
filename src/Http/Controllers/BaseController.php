@@ -233,7 +233,8 @@ abstract class BaseController extends Controller implements BaseControllerInterf
 
     protected function getViewName($key)
     {
-        return data_get($this->listDefaultViewName, $key, $this->defaultName.'.'.$key);
+        $viewName = data_get($this->listDefaultViewName, $key, $this->defaultName.'.'.$key);
+        return empty($viewName) ? $this->defaultName.'.'.$key : $viewName;
     }
 
     private function getMessageResponse($key)

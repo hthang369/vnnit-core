@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Traits;
+namespace Vnnit\Core\Traits;
 
-use Laka\Core\Exceptions\RepositoryException;
-use Laka\Core\Contracts\PresenterInterface;
+use Vnnit\Core\Exceptions\RepositoryException;
+use Vnnit\Core\Contracts\PresenterInterface;
 
 trait PresenterRepository
 {
+    use MakeObjectInstance;
     /**
      * @var bool
      */
@@ -44,18 +45,14 @@ trait PresenterRepository
      */
     public function makePresenter($presenter = null)
     {
-        $presenter = !is_null($presenter) ? $presenter : $this->presenter();
+        $presenter = $presenter ?? $this->presenter();
 
-        if (!is_null($presenter)) {
-            $presenterObject = is_string($presenter) ? resolve($presenter) : $presenter;
+        $presenterObject = $this->makeObject($presenter);
 
-            if (!$presenterObject instanceof PresenterInterface) {
-                throw new RepositoryException("Class {$presenter} must be an instance of Laka\\Core\\Contracts\\PresenterInterface");
-            }
-
-            return $presenterObject;
+        if (!$presenterObject instanceof PresenterInterface) {
+            throw new RepositoryException("Class {$presenter} must be an instance of Laka\\Core\\Contracts\\PresenterInterface");
         }
 
-        return null;
+        return $presenterObject;
     }
 }
