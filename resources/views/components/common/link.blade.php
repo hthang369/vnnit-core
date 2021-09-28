@@ -4,6 +4,6 @@
   @elseif (!blank($text))
     {!! $text !!}
   @else
-    {{ $slot }}
+    {!! $slot !!}
   @endif
 </a>

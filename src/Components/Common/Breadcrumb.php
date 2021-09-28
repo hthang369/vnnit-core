@@ -13,11 +13,9 @@ class Breadcrumb extends Component
 
     public function __construct(
         $class = '',
-        $currentPage = '',
         $pages = []
     )
     {
-        $this->currentPage = $currentPage ?? '';
         $this->pages = $pages ?? [];
         $this->attrs = [
             'class' => $class ?? '',
