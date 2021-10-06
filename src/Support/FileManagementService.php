@@ -1,6 +1,6 @@
 <?php
 
-namespace Vnnit\Core\Services;
+namespace Vnnit\Core\Support;
 
 use App\Exceptions\InvalidSpecificationException;
 use Carbon\Carbon;

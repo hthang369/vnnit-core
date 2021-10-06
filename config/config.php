@@ -15,12 +15,16 @@ use Vnnit\Core\Components\Common\CardHeader;
 use Vnnit\Core\Components\Common\CardText;
 use Vnnit\Core\Components\Common\CardTitle;
 use Vnnit\Core\Components\Common\Carousel;
+use Vnnit\Core\Components\Common\Col;
 use Vnnit\Core\Components\Common\Embed;
 use Vnnit\Core\Components\Common\Headline;
 use Vnnit\Core\Components\Common\Link;
 use Vnnit\Core\Components\Common\Media;
 use Vnnit\Core\Components\Common\Image;
+use Vnnit\Core\Components\Common\Row;
 use Vnnit\Core\Components\Common\Svg;
+use Vnnit\Core\Components\Common\SectionBox;
+use Vnnit\Core\Components\Common\SectionTitle;
 use Vnnit\Core\Components\Common\Toasts;
 use Vnnit\Core\Components\Forms\Checkbox;
 use Vnnit\Core\Components\Forms\Datepicker;
@@ -45,6 +49,9 @@ return [
         'numberFirstPage' => 1, // Số trang đầu tiên cân hiển thị,
         'numberLastPage' => 1, // Số trang cuối cân hiển thị
         'perPage' => 15
+    ],
+    'search' => [
+        'param' => 'q'
     ],
     'components' => [
         'datepicker' => [
@@ -179,19 +186,35 @@ return [
             'view'  => 'components.common.toasts',
             'class' => Toasts::class
         ],
+        'row' => [
+            'view'  => 'components.common.row',
+            'class' => Row::class
+        ],
+        'col' => [
+            'view'  => 'components.common.col',
+            'class' => Col::class
+        ],
+        'section-box' => [
+            'view'  => 'components.common.section-box',
+            'class' => SectionBox::class
+        ],
+        'section-title' => [
+            'view'  => 'components.common.section-title',
+            'class' => SectionTitle::class
+        ],
     ],
-    'form-components' => [
-        'bsInput' => [
-            'view'      => Input::class,
-            'params'    => ['name', 'type', 'class', 'groupClass', 'icon', 'prepent', 'size', 'value']
+    'bt-components' => [
+        'btText' => [
+            'view'      => 'components.bootstrap.forms.input',
+            'params'    => ['name', 'value', 'options' => [], 'type' => 'text']
         ],
-        'bsCheckbox' => [
-            'view'      => Checkbox::class,
-            'params'    => ['name', 'label', 'custom', 'checked']
+        'btButton' => [
+            'view'      => 'components.bootstrap.forms.button',
+            'params'    => ['text', 'variant' => '', 'options' => [], 'type' => 'button', 'btnType' => 'button']
         ],
-        'bsRadio' => [
-            'view'      => Radio::class,
-            'params'    => ['name', 'label', 'custom', 'value', 'checked']
+        'btSubmit' => [
+            'view'      => 'components.bootstrap.forms.button',
+            'params'    => ['text', 'variant' => '', 'options' => [], 'type' => 'submit', 'btnType' => 'button']
         ]
     ]
 ];

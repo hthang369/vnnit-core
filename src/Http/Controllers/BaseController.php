@@ -6,7 +6,6 @@ use Vnnit\Core\Contracts\BaseControllerInterface;
 use Vnnit\Core\Http\Response\WebResponse;
 use Vnnit\Core\Repositories\BaseRepository;
 use Vnnit\Core\Support\Factory;
-use Vnnit\Core\Traits\Authorizable;
 use Vnnit\Core\Validators\BaseValidator;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,6 +17,7 @@ use Illuminate\Routing\Controller;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Vnnit\Core\Responses\BaseResponse;
+use Vnnit\Core\Traits\Auth\Authorizable;
 
 abstract class BaseController extends Controller implements BaseControllerInterface
 {

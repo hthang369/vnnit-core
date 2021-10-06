@@ -68,11 +68,11 @@ class LakaPagination extends LengthAwarePaginator
             }
             return $item;
         });
-        return [
+        return collect([
             'first_link' => $results->first(),
             'elements' => $results->slice(1, $count - 2),
             'last_link' => $results->last()
-        ];
+        ]);
     }
 
     /**
@@ -86,7 +86,7 @@ class LakaPagination extends LengthAwarePaginator
     {
         return static::viewFactory()->make($view ?: static::$defaultView, array_merge($data, [
             'paginator' => $this,
-            'links' => $this->linkCollection(),
+            'links' => $this->linkCollection()->toArray(),
             'attributes' => new ComponentAttributeBag(),
             'attrs' => ['class' => 'pagination mb-0']
         ]));

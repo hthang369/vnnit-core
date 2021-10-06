@@ -29,4 +29,10 @@ class CommonHelper
 
         return $response->body();
     }
+
+    public function getViewName($name)
+    {
+        $prefix = config('vnnit-core.prefix');
+        return "{$prefix}::components.{$name}";
+    }
 }

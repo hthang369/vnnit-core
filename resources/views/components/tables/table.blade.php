@@ -28,9 +28,9 @@
                     @foreach ($fields as $field)
                         @continue(!$field->visible)
                         <x-table-column :field="$field" :data="$item">
-                            @if (!is_null($field->lookup->dataSource))
+                            @if (!is_null(data_get($field->lookup, 'dataSource')))
                                 {!! data_get($field->lookup->items, data_get($item, $field->key)) !!}
-                            @else
+                            @elseif ($field->dataType != 'buttons')
                                 {!! data_get($item, $field->key) !!}
                             @endif
                         </x-table-column>

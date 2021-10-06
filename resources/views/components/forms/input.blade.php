@@ -1,5 +1,6 @@
 @php
     $options = $attributes->class(['form-control', $class])->getAttributes();
+    $prefix = config('vnnit-core.prefix');
 @endphp
 <div class="{{$groupClass}}">
 @if (!empty($icon))
@@ -11,15 +12,9 @@
 
     {!! Form::input($type, $name, $value, $options) !!}
 
-    @if(!empty($help))
-        <small id="help-{{ $name }}" class="form-text text-muted">{!! $help !!}</small>
-    @endif
+    @include($prefix.'::components.forms.help-block')
 
-    @if(isset($errors) && $errors->has($name))
-        <div class="{{ $errors->has($name) ? 'invalid' : '' }}-feedback d-block">
-        {!! $errors->first($name) !!}
-        </div>
-    @endif
+    @include($prefix.'::components.forms.errors')
 
 @if (!empty($icon))
     @if (!$prepent)

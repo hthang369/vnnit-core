@@ -3,8 +3,8 @@
 namespace Vnnit\Core\Permissions;
 
 use Vnnit\Core\Contracts\CanCheckInUse;
-use Vnnit\Core\Traits\CheckInUse;
-use Vnnit\Core\Traits\FullTextSearch;
+use Vnnit\Core\Traits\Common\CheckInUse;
+use Vnnit\Core\Traits\Entities\FullTextSearch;
 
 class Role extends \Spatie\Permission\Models\Role implements CanCheckInUse
 {

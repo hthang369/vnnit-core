@@ -4,13 +4,15 @@ namespace Vnnit\Core\Presenters;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Vnnit\Core\Contracts\PresenterInterface;
+use Vnnit\Core\Grids\GenericButton;
 use Vnnit\Core\Helpers\Classes;
-use Vnnit\Core\Traits\CommonFunction;
-use Vnnit\Core\Traits\HasDataColumn;
+use Vnnit\Core\Traits\Common\CommonFunction;
+use Vnnit\Core\Traits\Grids\HasDataColumn;
+use Vnnit\Core\Traits\Grids\RendersButtons;
 
 abstract class BaseDataGridPresenter implements PresenterInterface
 {
-    use HasDataColumn, CommonFunction;
+    use HasDataColumn, CommonFunction, RendersButtons;
 
     private $fields = [];
     private $actionName = 'action';
@@ -27,6 +29,9 @@ abstract class BaseDataGridPresenter implements PresenterInterface
     ];
     protected $resultData = [];
     protected $paginator = null;
+
+    protected $id;
+    protected $name;
 
     protected function setColumns()
     {
@@ -58,60 +63,11 @@ abstract class BaseDataGridPresenter implements PresenterInterface
                 $item = data_get(call_user_func([$this, 'customizeRowData'], $itemData), 'data');
             }
             if (blank($item->{$this->actionName})) {
-                $actions = [
-                    $this->getEditActionBtn($item),
-                    $this->getDetailActionBtn($item),
-                    $this->getDeleteActionBtn($item)
-                ];
+                $actions = $this->getButtons(GenericButton::TYPE_ROW);
                 data_set($item, $this->actionName, $actions);
             }
             return $item;
-        })->all();
-    }
-
-    private function getEditActionBtn($item)
-    {
-        return $this->getFieldButton('edit', '', [
-            'class' => 'btn-primary',
-            'icon' => 'far fa-edit',
-            'title' => translate('table.btn_edit'),
-            'visible' => $this->visibleEdit($item)
-        ]);
-    }
-
-    private function getDetailActionBtn($item)
-    {
-        return $this->getFieldButton('show', '', [
-            'class' => 'btn-info',
-            'icon' => 'fas fa-info-circle',
-            'title' => translate('table.btn_detail'),
-            'visible' => $this->visibleDetail($item)
-        ]);
-    }
-
-    private function getDeleteActionBtn($item)
-    {
-        return $this->getFieldButton('destroy', '', [
-            'class' => 'btn-danger',
-            'icon' => 'far fa-trash-alt',
-            'title' => translate('table.btn_delete'),
-            'visible' => $this->visibleDelete($item)
-        ]);
-    }
-
-    protected function visibleEdit($item)
-    {
-        return true;
-    }
-
-    protected function visibleDetail($item)
-    {
-        return true;
-    }
-
-    protected function visibleDelete($item)
-    {
-        return true;
+        })->toArray();
     }
 
     /**
@@ -132,6 +88,7 @@ abstract class BaseDataGridPresenter implements PresenterInterface
 
     protected function parsePresent($results, $total)
     {
+        $this->setButtons();
         return array_merge($this->template, [
             'fields'        => $this->getColumns(),
             'rows'          => method_exists($results, 'items') ? $this->parseRows($results) : $results,

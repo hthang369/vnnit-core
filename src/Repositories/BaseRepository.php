@@ -6,7 +6,6 @@ use Vnnit\Core\Contracts\RepositoryInterface;
 use Vnnit\Core\Exceptions\RepositoryException;
 use Vnnit\Core\Repositories\FilterQueryString\FilterQueryString;
 use Vnnit\Core\Repositories\FilterQueryString\Filters\OrderbyClause;
-use Vnnit\Core\Traits\RequestParamTrait;
 use Closure;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -14,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Vnnit\Core\Traits\Entities\RequestParamTrait;
 
 abstract class BaseRepository implements RepositoryInterface
 {
@@ -205,7 +205,7 @@ abstract class BaseRepository implements RepositoryInterface
 
         $columns = $this->getColumns($columns);
 
-        $limit = is_null($limit) ? $this->getLimitForPagination() : $limit;
+        $limit = is_null($limit) ? $this->getPerPageSize() : $limit;
         $results = $this->model->{$method}($limit, $columns);
         $results->appends(request()->except($this->except));
         $this->resetQuery();
@@ -282,13 +282,13 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->parserResult($model);
     }
 
-    protected function getLimitForPagination()
+    protected function getPerPageSize()
     {
         if (request()->has('perPage')) {
             $limit = request()->query('perPage');
-            return $limit != -1 ? $limit : config('constants.pagination.items_per_page');
+            return $limit != -1 ? $limit : config('vnnit-core.pagination.perPage');
         } else  {
-            return config('constants.pagination.items_per_page');
+            return config('vnnit-core.pagination.perPage');
         }
     }
 

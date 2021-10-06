@@ -4,9 +4,9 @@ namespace Vnnit\Core\Entities;
 
 use Vnnit\Core\Observers\BaseModelObserver;
 use Illuminate\Database\Eloquent\Model;
-use Vnnit\Core\Traits\FullTextSearch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
+use Vnnit\Core\Traits\Entities\FullTextSearch;
 
 class BaseModel extends Model
 {

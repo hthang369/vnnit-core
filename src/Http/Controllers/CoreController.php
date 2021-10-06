@@ -3,10 +3,10 @@
 namespace Vnnit\Core\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
-use Kris\LaravelFormBuilder\FormBuilder;
 use Vnnit\Core\Validators\BaseValidator;
-use Leantony\Grid\Grid;
-use Vnnit\Core\Repositories\BaseRepository;
+use Vnnit\Core\Forms\FormBuilder;
+use Vnnit\Core\Grids\BaseGridPresenter;
+use Vnnit\Core\Repositories\CoreRepository;
 use Vnnit\Core\Responses\BaseResponse;
 
 class CoreController extends BaseController
@@ -14,7 +14,7 @@ class CoreController extends BaseController
     private $routeName;
     protected $formBuilder;
 
-    public function __construct(BaseRepository $repository, BaseValidator $validator, BaseResponse $response)
+    public function __construct(CoreRepository $repository, BaseValidator $validator, BaseResponse $response)
     {
         parent::__construct($repository, $validator, $response);
         $this->formBuilder = resolve(FormBuilder::class);
@@ -35,18 +35,17 @@ class CoreController extends BaseController
         $this->routeName = $value;
     }
 
-    public function renderView($dataGrid, $viewName, $customName = null, $data = [])
+    public function renderView($results, $viewName, $customName = null, $data = [])
     {
+        list($grid, $result) = $results;
         $defaultName = $customName ?? $this->getViewName($viewName);
-        // if ($dataGrid instanceof Grid)
-            return $dataGrid->renderOn($defaultName, $data);
-        // return parent::responseView(request(), $data, $defaultName);
+        return parent::responseView(request(), compact('data', 'grid', 'result'), $defaultName);
     }
 
     public function renderViewData($data, $viewName, $customName = null)
     {
         $defaultName = $customName ?? $this->getViewName($viewName);
-        return view($defaultName, $data)->render();
+        return $this->responseView(request(), $data, $defaultName);
     }
 
     /**
@@ -67,7 +66,7 @@ class CoreController extends BaseController
     {
         list($modal, $formData) = $this->repository->formGenerate(route($this->routeName.'.store'), __FUNCTION__);
 
-        $form = $this->formBuilder->create($formData)->renderForm([], false, true, false);
+        $form = $this->formBuilder->create($formData, $modal);
 
         return $this->renderViewData(compact('modal', 'form'), __FUNCTION__);
     }

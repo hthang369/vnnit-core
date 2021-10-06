@@ -57,3 +57,35 @@ if (!function_exists('array_css_class')) {
         return Arr::toCssClasses($arrClass);
     }
 }
+
+if (! function_exists('avatar_url')) {
+    /**
+     * Returns the avatar URL of a user.
+     *
+     * @param $user
+     * @return string
+     */
+    function avatar_url($user)
+    {
+        $firstLetter = $user->getAttribute('name') ? mb_substr($user->name, 0, 1, 'UTF-8') : 'A';
+        $placeholder = 'https://via.placeholder.com/35x35/00a65a/ffffff/&text='.$firstLetter;
+
+        switch (config('vnnit.avatar_type')) {
+            case 'gravatar':
+                if (!blank(user_get('email'))) {
+                    return Gravatar::fallback('https://via.placeholder.com/160x160/00a65a/ffffff/&text='.$firstLetter)->get($user->email);
+                } else {
+                    return $placeholder;
+                }
+                break;
+
+            case 'placehold':
+                return $placeholder;
+                break;
+
+            default:
+                return method_exists($user, config('backpack.base.avatar_type')) ? $user->{config('backpack.base.avatar_type')}() : $user->{config('backpack.base.avatar_type')};
+                break;
+        }
+    }
+}

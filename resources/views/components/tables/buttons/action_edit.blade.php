@@ -1,9 +1,9 @@
-@props(['item', 'dataId'])
-<a name="{{$item['key']}}" class="btn btn-sm {{$item['class']}}"
-    href="{{ route("{$sectionCode}.{$item['key']}", $dataId)}}"
-    title="{{$item['title']}}">
-    {{$item['label']}}
-    @if (!empty($item['icon']))
-        <i class="{{$item['icon']}}"></i>
+@props(['item', 'data'])
+<a name="{{$item->key}}" class="{{$item->class}}"
+    href="{{ with($data, $item->url) }}"
+    title="{{$item->title}}">
+    @if (!blank($item->icon))
+        <i class="{{ array_css_class($item->icon, ['mr-1' => !empty($item->label)]) }}"></i>
     @endif
+    {{$item->label}}
 </a>

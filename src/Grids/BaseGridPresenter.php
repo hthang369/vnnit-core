@@ -5,9 +5,9 @@ namespace Vnnit\Core\Grids;
 use Illuminate\Contracts\Support\Htmlable;
 use Vnnit\Core\Helpers\Classes;
 use Vnnit\Core\Presenters\BaseDataGridPresenter;
-use Vnnit\Core\Traits\ConfiguresGrid;
-use Vnnit\Core\Traits\HasDataColumn;
-use Vnnit\Core\Traits\RendersGrid;
+use Vnnit\Core\Traits\Grids\ConfiguresGrid;
+use Vnnit\Core\Traits\Grids\HasDataColumn;
+use Vnnit\Core\Traits\Grids\RendersGrid;
 
 abstract class BaseGridPresenter extends BaseDataGridPresenter implements Htmlable
 {
@@ -16,6 +16,8 @@ abstract class BaseGridPresenter extends BaseDataGridPresenter implements Htmlab
     private $indexName = 'index';
 
     protected $indexColumnOptions = [];
+
+    protected $indexRouteName = null;
 
     private function getIndexOptions()
     {

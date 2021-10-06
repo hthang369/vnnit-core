@@ -9,5 +9,7 @@ return [
     'btn_delete' => 'Xóa',
     'show_result' => 'Hiển thị %d đến %d trong số %d kết quả',
     'action'    => 'Hành động',
-    'select'    => 'Chọn ...'
+    'select'    => 'Chọn ...',
+    'btn_create' => 'Tạo mới',
+    'btn_refresh' => 'Tải lại'
 ];

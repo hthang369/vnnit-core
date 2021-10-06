@@ -6,13 +6,19 @@ use Collective\Html\FormFacade as Form;
 use Illuminate\Support\Facades\Blade;
 use Vnnit\Core\Support\CommonHelper;
 use Vnnit\Core\Support\FileManagementService;
+use Vnnit\Core\Support\ModalHelper;
 
 class VnnitCoreServiceProvider extends BaseServiceProvider
 {
     protected $facades = [
         'file-management' => FileManagementService::class,
-        'common-helper' => CommonHelper::class
+        'common-helper' => CommonHelper::class,
+        'modal'  => ModalHelper::class
     ];
+
+    protected $moduleNamespace = 'Vnnit\\Core\\';
+    protected $modulePath = __DIR__;
+    protected $commandPath = __DIR__.'\\Console';
 
     public function boot()
     {
@@ -27,6 +33,10 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
         $this->registerFormComponents();
 
         $this->loadHelperFile();
+
+        $this->registerCommands();
+
+        // $this->app->alias('Modal', ModalHelper::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -44,6 +54,7 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'vnnit-core');
         $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
+        $this->mergeConfigFrom(__DIR__ . '/../config/form-builder.php', 'form-builder');
         parent::register();
     }
 
@@ -60,8 +71,14 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
 
     protected function registerFormComponents()
     {
-        collect(config('vnnit-core.bt-components'))->each(function($item, $alias) {
-            Form::component($alias, $item['view'], $item['params']);
+        $prefix = config('vnnit-core.prefix');
+        collect(config('vnnit-core.bt-components'))->each(function($item, $alias) use($prefix) {
+            Form::component($alias, $prefix.'::'.$item['view'], $item['params']);
         });
+    }
+
+    public function provides()
+    {
+        return ['modal', ModalHelper::class];
     }
 }

@@ -3,8 +3,8 @@
 namespace Vnnit\Core\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
-use Vnnit\Core\Traits\MakeObjectInstance;
-use Vnnit\Core\Traits\PresenterDataGrid;
+use Vnnit\Core\Traits\Common\MakeObjectInstance;
+use Vnnit\Core\Traits\Grids\PresenterDataGrid;
 
 /**
  * Class BaseRepositoryEloquent.
@@ -20,11 +20,6 @@ abstract class CoreRepository extends BaseRepository
     protected $service;
 
     /**
-     * $var grid;
-     */
-    protected $dataGrid;
-
-    /**
      * $var form;
      */
     protected $formData;
@@ -35,16 +30,6 @@ abstract class CoreRepository extends BaseRepository
      * @return string
      */
     public function service()
-    {
-        return null;
-    }
-
-    /**
-     * Specify Grid class name
-     *
-     * @return string
-     */
-    public function grid()
     {
         return null;
     }
@@ -75,21 +60,6 @@ abstract class CoreRepository extends BaseRepository
     }
 
     /**
-     * @param null $grid
-     *
-     * @return mixin
-     * @throws RepositoryException
-     */
-    public function makeDataGrid($grid = null)
-    {
-        $gridClass = $grid ?? $this->grid();
-
-        $this->dataGrid = $this->makeObject($gridClass);
-
-        return $this->dataGrid;
-    }
-
-    /**
      * @param null $form
      *
      * @return mixin
@@ -110,7 +80,6 @@ abstract class CoreRepository extends BaseRepository
     protected function boot()
     {
         $this->makeService();
-        $this->makeDataGrid();
         $this->makeFormData();
     }
 
@@ -124,12 +93,21 @@ abstract class CoreRepository extends BaseRepository
         $this->model::reguard();
     }
 
+    protected function postFilterByRequest(Builder $query)
+    {
+        if (method_exists($this, 'apply')) {
+            $query = call_user_func([$this, 'apply'], $query);
+        }
+        return $this->defaultOrderBy($query);
+    }
+
     public function allDataGrid()
     {
-        if ($this->dataGrid) {
-            return $this->dataGrid->create($this->getGridParams());
+        if ($this->presenterGrid) {
+            $data = $this->paginate();
+            return [$this->presenterGrid, $data];
         }
-        return null;
+        return [];
     }
 
     protected function getGridParams()

@@ -3,7 +3,7 @@
 namespace Vnnit\Core\Components\Tables;
 
 use Vnnit\Core\Components\Component;
-use Vnnit\Core\Traits\HasDataColumn;
+use Vnnit\Core\Traits\Grids\HasDataColumn;
 
 class Table extends Component
 {
