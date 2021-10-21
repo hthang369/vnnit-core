@@ -5,10 +5,10 @@ namespace Vnnit\Core\Traits\Auth;
 use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
-use Vnnit\Core\Http\Response\WebResponse;
 use Prettus\Validator\Exceptions\ValidatorException;
 use \Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Exceptions\UnauthorizedException;
+use Vnnit\Core\Http\Response\WebResponse;
 use Vnnit\Core\Traits\Common\CommonFunction;
 
 /*
@@ -79,13 +79,13 @@ trait Authorizable
             if (empty($errorRoute))
                 throw $e;
             else
-                return WebResponse::validateFail($errorRoute, $e->getMessageBag(), $this->getMessageResponse($method));
+                return $this->response->validationError(request(), $e->getMessageBag(), $errorRoute, $this->getMessageResponse($method));
         } catch (\Exception $e) {
             $errorRoute = $this->getErrorRouteName($method, $params);
             if (empty($errorRoute))
                 throw $e;
             else
-                return WebResponse::exception($errorRoute, $e->getMessage(), $this->getMessageResponse($method));
+                return $this->response->error(request(), $e->getMessage(), $errorRoute, $this->getMessageResponse($method));
         }
     }
 

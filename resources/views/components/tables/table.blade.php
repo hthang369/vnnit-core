@@ -16,7 +16,7 @@
                     @if ($field->filtering || str_is($field->dataType, 'buttons'))
                         <x-table-filter class="p-1" :field="$field" />
                     @else
-                        <x-table-column :field="new Vnnit\Core\Helpers\DataColumn" />
+                        <x-table-column :field="new Vnnit\Core\Grids\DataColumn" />
                     @endif
                 @endforeach
             </x-table-row>
@@ -28,8 +28,8 @@
                     @foreach ($fields as $field)
                         @continue(!$field->visible)
                         <x-table-column :field="$field" :data="$item">
-                            @if (!is_null(data_get($field->lookup, 'dataSource')))
-                                {!! data_get($field->lookup->items, data_get($item, $field->key)) !!}
+                            @if (is_object($field->lookup) && !is_null($field->lookup->dataSource))
+                                {!! data_get($field->lookup->items, ifnull(data_get($item, $field->key), 0)) !!}
                             @elseif ($field->dataType != 'buttons')
                                 {!! data_get($item, $field->key) !!}
                             @endif
@@ -38,7 +38,7 @@
                 </x-table-row>
             @empty
                 @php
-                    $field = new Vnnit\Core\Helpers\DataColumn;
+                    $field = new Vnnit\Core\Grids\DataColumn;
                     $field->tdAttr = ['colspan' => count($fields)];
                     $prefix = config('vnnit-core.prefix');
                 @endphp

@@ -16,6 +16,8 @@ class Field
     const HIDDEN = 'hidden';
     const FILE = 'file';
     const STATIC = 'static';
+    const CHECKBOX_GROUP = 'checkbox-group';
+    const RADIO_GROUP = 'radio-group';
     //Date time fields
     const DATE = 'date';
     const DATETIME_LOCAL = 'datetime-local';
@@ -35,6 +37,8 @@ class Field
     const FORM = 'form';
     const REPEATED = 'repeated';
     const COLLECTION = 'collection';
+    const PICTURE = 'picture';
+    const MAP = 'map';
     //Buttons
     const BUTTON_SUBMIT = 'submit';
     const BUTTON_RESET = 'reset';

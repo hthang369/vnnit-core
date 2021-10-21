@@ -2,6 +2,7 @@
 namespace Vnnit\Core\Forms\Fields;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\View;
 use Illuminate\View\ComponentAttributeBag;
 use Vnnit\Core\Forms\Form;
 use Vnnit\Core\Traits\Grids\CallableData;
@@ -35,6 +36,47 @@ abstract class FormField
      */
     protected $options = [];
 
+    /**
+     * Name of the property for value setting.
+     *
+     * @var string
+     */
+    protected $valueProperty = 'value';
+
+    /**
+     * Name of the property for default value.
+     *
+     * @var string
+     */
+    protected $defaultValueProperty = 'default_value';
+
+    /**
+     * @var \Closure|null
+     */
+    protected $valueClosure = null;
+
+    /**
+     * Is default value set?
+     *
+     * @var bool|false
+     */
+    protected $hasDefault = false;
+
+    /**
+     * @var bool|false
+     */
+    protected $showLabel = false;
+
+    /**
+     * @var bool|false
+     */
+    protected $showField = false;
+
+    /**
+     * @var bool|false
+     */
+    protected $showError = false;
+
     abstract protected function getTemplate();
     abstract protected function getAttributes();
 
@@ -44,11 +86,12 @@ abstract class FormField
         $this->name = $name;
         $this->parent = $parent;
         $this->setDefaultOptions($options);
+        $this->setupValue();
     }
 
-    public static function make($name, $type)
+    public static function make($name, $type, Form $parent, array $options = [])
     {
-        $obj = new static($name, $type);
+        $obj = new static($name, $type, $parent, $options);
         return $obj;
     }
 
@@ -83,6 +126,8 @@ abstract class FormField
             'default_value' => null,
             'label' => null,
             'label_show' => true,
+            'field_show' => true,
+            'error_show' => false,
             'is_child' => false,
             'label_attr' => ['class' => $this->parent->getConfig('defaults.label_class')],
             'label_for' => '',
@@ -141,6 +186,87 @@ abstract class FormField
     }
 
     /**
+     * Setup the value of the form field.
+     *
+     * @return void
+     */
+    protected function setupValue()
+    {
+        $value = $this->getOption($this->valueProperty);
+        $isChild = $this->getOption('is_child');
+
+        if ($value instanceof \Closure) {
+            $this->valueClosure = $value;
+        }
+
+        if ((blank($value) || $value instanceof \Closure) && !$isChild) {
+            if ($this instanceof EntityType) {
+                $attributeName = $this->name;
+            } else {
+                $attributeName = $this->getOption('value_property', $this->name);
+            }
+
+            $this->setValue($this->getModelValueAttribute($this->parent->getModel(), $attributeName));
+        } elseif (!$isChild) {
+            $this->hasDefault = true;
+        }
+    }
+
+    /**
+     * Get the attribute value from the model by name.
+     *
+     * @param mixed $model
+     * @param string $name
+     * @return mixed
+     */
+    protected function getModelValueAttribute($model, $name)
+    {
+        $transformedName = $this->parent->transformToDotSyntax($name);
+        if (is_string($model)) {
+            return $model;
+        } elseif (is_object($model)) {
+            return object_get($model, $transformedName);
+        } elseif (is_array($model)) {
+            return Arr::get($model, $transformedName);
+        }
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        if ($this->hasDefault) {
+            return $this;
+        }
+
+        $closure = $this->valueClosure;
+
+        if ($closure instanceof \Closure) {
+            $value = $closure($value ?: null);
+        }
+
+        if (!$this->isValidValue($value)) {
+            $value = $this->getOption($this->defaultValueProperty);
+        }
+
+        $this->options[$this->valueProperty] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Check if provided value is valid for this type.
+     *
+     * @return bool
+     */
+    protected function isValidValue($value)
+    {
+        return $value !== null;
+    }
+
+    /**
      * Get field options.
      *
      * @return array
@@ -166,12 +292,18 @@ abstract class FormField
     {
         $prefix = config('vnnit-core.prefix');
         $view = 'components.form-field.'.$this->getTemplate();
-        return "{$prefix}::{$view}";
+        $viewName = "{$prefix}::{$view}";
+        if (!View::exists($viewName))
+            $viewName = 'components.fields.'.$this->getTemplate();
+        return $viewName;
     }
 
     protected function getCompactData()
     {
         $attrs = array_except(get_object_vars($this), ['parent']);
+        data_set($attrs, 'showLabel', $this->getOption('label_show'));
+        data_set($attrs, 'showField', $this->getOption('field_show'));
+        data_set($attrs, 'showError', $this->getOption('error_show'));
         return $attrs;
     }
 

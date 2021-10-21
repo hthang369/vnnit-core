@@ -1,14 +1,20 @@
 <?php
 namespace Vnnit\Core\Forms\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Vnnit\Core\Forms\Field;
 use Vnnit\Core\Forms\Fields\ButtonGroupType;
 use Vnnit\Core\Forms\Fields\ButtonType;
+use Vnnit\Core\Forms\Fields\CheckableGroupType;
 use Vnnit\Core\Forms\Fields\CheckableType;
 use Vnnit\Core\Forms\Fields\ChoiceType;
 use Vnnit\Core\Forms\Fields\CollectionType;
 use Vnnit\Core\Forms\Fields\EntityType;
 use Vnnit\Core\Forms\Fields\InputType;
+use Vnnit\Core\Forms\Fields\MapType;
+use Vnnit\Core\Forms\Fields\PictureType;
 use Vnnit\Core\Forms\Fields\RepeatedType;
 use Vnnit\Core\Forms\Fields\SelectType;
 use Vnnit\Core\Forms\Fields\StaticType;
@@ -47,6 +53,10 @@ trait FormHelper
         Field::REPEATED         => RepeatedType::class,
         Field::ENTITY           => EntityType::class,
         Field::COLLECTION       => CollectionType::class,
+        Field::CHECKBOX_GROUP   => CheckableGroupType::class,
+        Field::RADIO_GROUP      => CheckableGroupType::class,
+        Field::PICTURE          => PictureType::class,
+        Field::MAP              => MapType::class,
         // 'form'           => 'ChildFormType',
     ];
 
@@ -193,5 +203,51 @@ trait FormHelper
         }
 
         return ucfirst(str_replace('_', ' ', $name));
+    }
+
+    /**
+     * Get single form option.
+     *
+     * @param string $option
+     * @param mixed|null $default
+     * @return mixed
+     */
+    public function getFormOption($option, $default = null)
+    {
+        return Arr::get($this->formOptions, $option, $default);
+    }
+
+    /**
+     * Get an option from provided options and call method with that value.
+     *
+     * @param string $name
+     * @param string $method
+     */
+    protected function pullFromOptions($name, $method)
+    {
+        if ($this->getFormOption($name) !== null) {
+            $this->{$method}(Arr::pull($this->formOptions, $name));
+        }
+    }
+
+    /**
+     * @param object $model
+     * @return object|null
+     */
+    public function convertModelToArray($model)
+    {
+        if (!$model) {
+            return null;
+        }
+
+        if ($model instanceof Model) {
+            return $model->toArray();
+        }
+
+        if ($model instanceof Collection) {
+            return $model->all();
+        }
+
+        return $model;
     }
 }

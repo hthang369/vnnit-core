@@ -2,14 +2,14 @@
 namespace Vnnit\Core\Forms;
 
 use Illuminate\Support\Arr;
-use PhpParser\Node\Expr\Print_;
 use Vnnit\Core\Forms\Fields\FormField;
 use Vnnit\Core\Forms\Traits\FormHelper;
+use Vnnit\Core\Forms\Traits\RendersForm;
 use Vnnit\Core\Traits\Grids\CallableData;
 
 abstract class Form
 {
-    use FormHelper, CallableData;
+    use FormHelper, CallableData, RendersForm;
     /**
      * All fields that are added.
      *
@@ -165,7 +165,80 @@ abstract class Form
 
     public function setFormOptions(array $options)
     {
+        $this->formOptions = $this->mergeOptions($this->formOptions, $options);
+        $this->pullFromOptions('name', 'setName');
+        $this->pullFromOptions('model', 'setupModel');
+        $this->pullFromOptions('language_name', 'setLanguageName');
         return $this;
+    }
+
+    protected function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Setup model for form, add namespace if needed for child forms.
+     *
+     * @return $this
+     */
+    protected function setupModel($model)
+    {
+        $this->model = $model;
+        $this->setupNamedModel();
+
+        return $this;
+    }
+
+    /**
+     * Set namespace to model if form is named so the data is bound properly.
+     * Returns true if model is changed, otherwise false.
+     *
+     * @return bool
+     */
+    protected function setupNamedModel()
+    {
+        if (!$this->model || !$this->name) {
+            return false;
+        }
+
+        $dotName = $this->getNameKey();
+        $model = $this->convertModelToArray($this->model);
+        $isCollectionFormModel = (bool) preg_match('/^.*\.\d+$/', $dotName);
+        $isCollectionPrototype = strpos($dotName, '__NAME__') !== false;
+
+        if (!Arr::get($model, $dotName) && !$isCollectionFormModel && !$isCollectionPrototype) {
+            $newModel = [];
+            Arr::set($newModel, $dotName, $model);
+            $this->model = $newModel;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Set a language name, used as prefix for translated strings.
+     *
+     * @param string $prefix
+     * @return $this
+     */
+    public function setLanguageName($prefix)
+    {
+        $this->languageName = (string) $prefix;
+
+        return $this;
+    }
+
+    /**
+     * Get dot notation key for the form.
+     *
+     * @return string
+     **/
+    public function getNameKey()
+    {
+        return $this->transformToDotSyntax($this->name);
     }
 
     /**
@@ -200,21 +273,5 @@ abstract class Form
     public function getModel()
     {
         return $this->model;
-    }
-
-    protected function getView()
-    {
-        $prefix = config('vnnit-core.prefix');
-        $view = 'components.form-field.form';
-        return "{$prefix}::{$view}";
-    }
-
-    public function render()
-    {
-        $showStart = false;
-        $showFields = true;
-        $showEnd = false;
-
-        return view($this->getView(), array_merge(get_object_vars($this), compact('showStart', 'showFields', 'showEnd')))->render();
     }
 }

@@ -5,7 +5,7 @@ class CheckableType extends FormField
 {
     protected function getTemplate()
     {
-        return 'input';
+        return 'checkable';
     }
 
     protected function getAttributes()

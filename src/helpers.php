@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Arr;
+use Vnnit\Core\Forms\Form;
 
 if (!function_exists('get_classes')) {
     function get_classes($classes)
@@ -87,5 +88,19 @@ if (! function_exists('avatar_url')) {
                 return method_exists($user, config('backpack.base.avatar_type')) ? $user->{config('backpack.base.avatar_type')}() : $user->{config('backpack.base.avatar_type')};
                 break;
         }
+    }
+}
+
+if (!function_exists('ifnull')) {
+    function ifnull($data, $value) {
+        return is_null($data) ? $value : $data;
+    }
+}
+
+if (!function_exists('form')) {
+
+    function form(Form $form, array $options = [])
+    {
+        return $form->renderForm($options);
     }
 }

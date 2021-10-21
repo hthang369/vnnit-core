@@ -8,6 +8,8 @@ class DataColumn
 {
     use CallableData;
 
+    protected $privateField = [];
+
     private $key;
     private $label;
     private $class;

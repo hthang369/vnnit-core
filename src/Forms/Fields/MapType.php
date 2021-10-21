@@ -1,17 +1,17 @@
 <?php
 namespace Vnnit\Core\Forms\Fields;
 
-class StaticType extends FormField
+class MapType extends FormField
 {
     protected function getTemplate()
     {
-        return 'static';
+        return 'map';
     }
 
     protected function getAttributes()
     {
         return [
-            'attr' => ['class' => 'form-control-plaintext'],
+            'attr' => ['class' => 'embed-responsive-item'],
         ];
     }
 
@@ -22,6 +22,6 @@ class StaticType extends FormField
      */
     protected function getDefaults()
     {
-        return ['tag' => 'div'];
+        return ['tag' => 'iframe'];
     }
 }

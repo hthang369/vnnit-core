@@ -1,6 +1,8 @@
 <?php
 namespace Vnnit\Core\Forms\Fields;
 
+use Vnnit\Core\Forms\Field;
+
 class InputType extends FormField
 {
     protected function getTemplate()
@@ -11,7 +13,7 @@ class InputType extends FormField
     protected function getAttributes()
     {
         return [
-            'class' => 'form-control',
+            'label_show' => !str_is($this->type, Field::HIDDEN),
         ];
     }
 }

@@ -53,11 +53,21 @@ trait RendersButtons
         ];
     }
 
+    public function getButton($key, $type = GenericButton::TYPE_TOOLBAR)
+    {
+        return data_get($this->buttons, $type.'.'.$key, null);
+    }
+
     public function getButtons($type = GenericButton::TYPE_TOOLBAR)
     {
         $btns = data_get($this->buttons, $type, $this->buttons);
 
         return collect($btns)->sortBy('position')->toArray();
+    }
+
+    public function hasButton($key, $type = GenericButton::TYPE_TOOLBAR)
+    {
+        return !is_null($this->getButton($key, $type));
     }
 
     protected function configureCreateButton()

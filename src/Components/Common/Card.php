@@ -33,7 +33,7 @@ class Card extends Component
         $class = '',
         $noBody = false,
         $bodyClass = '',
-        $imgSrc = '',
+        $imgSrc = null,
         $imgTop = true,
         $imgBottom = false
     )

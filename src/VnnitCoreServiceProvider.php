@@ -16,6 +16,12 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
         'modal'  => ModalHelper::class
     ];
 
+    protected $publishConfigs = [
+        'vnnit-core' => 'config.php',
+        'permission' => 'permission.php',
+        'form-builder' => 'form-builder.php'
+    ];
+
     protected $moduleNamespace = 'Vnnit\\Core\\';
     protected $modulePath = __DIR__;
     protected $commandPath = __DIR__.'\\Console';
@@ -39,9 +45,11 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
         // $this->app->alias('Modal', ModalHelper::class);
 
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../../config/config.php' => config_path('vnnit-core.php'),
-            ], 'config');
+            foreach($this->publishConfigs as $key => $file) {
+                $this->publishes([
+                    __DIR__ . '/../config/'.$file => config_path("{$key}.php"),
+                ], 'config');
+            }
         }
     }
 
@@ -52,9 +60,9 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'vnnit-core');
-        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
-        $this->mergeConfigFrom(__DIR__ . '/../config/form-builder.php', 'form-builder');
+        foreach($this->publishConfigs as $key => $file) {
+            $this->mergeConfigFrom(__DIR__ . '/../config/'.$file, $key);
+        }
         parent::register();
     }
 

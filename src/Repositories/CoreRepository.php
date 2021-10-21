@@ -24,6 +24,8 @@ abstract class CoreRepository extends BaseRepository
      */
     protected $formData;
 
+    protected $presenterClass;
+
     /**
      * Specify Service class name
      *
@@ -137,7 +139,7 @@ abstract class CoreRepository extends BaseRepository
     public function formGenerate($route, $actionName, $config = [])
     {
         $modal = [
-            'model' => class_basename($this->model()),
+            'model' => $this->model,
             'route' => $route,
             'action' => $actionName,
             'pjaxContainer' => request()->get('ref'),

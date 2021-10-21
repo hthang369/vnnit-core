@@ -32,6 +32,7 @@
           pjax: {
             pjaxOptions: {
               scrollTo: false,
+              timeout: 3000
             },
             // what to do after a PJAX request. Js plugins have to be re-intialized
             afterPjax: function(e) {

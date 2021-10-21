@@ -6,9 +6,13 @@
         <x-dynamic-component :component="$headerCompo" :text="$header" />
     @endif
 
-    {{-- @if ($imgSrc && $imgTop)
-        <x-image :src="{{$imgSrc}}" />
-    @endif --}}
+    @if ($imgTop)
+        {!! $imgSrc !!}
+
+        @if (filter_var($imgSrc, FILTER_VALIDATE_URL))
+            {{-- <x-image :src="{{$imgSrc}}" /> --}}
+        @endif
+    @endif
 
     @if (!$noBody)
         <div {!! attributes_get($bodyAttr) !!}>
@@ -25,9 +29,13 @@
         {!! $slot !!}
     @endif
 
-    {{-- @if ($imgSrc && $imgBottom)
-        <x-image :src="{{$imgSrc}}" />
-    @endif --}}
+    @if ($imgBottom)
+        @if (filter_var($imgSrc, FILTER_VALIDATE_URL))
+            {{-- <x-image :src="{{$imgSrc}}" /> --}}
+        @else
+            {!! $imgSrc !!}
+        @endif
+    @endif
 
     @if (blank($footer))
         {!! $footer !!}

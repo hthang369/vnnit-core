@@ -21,6 +21,7 @@ use Vnnit\Core\Components\Common\Headline;
 use Vnnit\Core\Components\Common\Link;
 use Vnnit\Core\Components\Common\Media;
 use Vnnit\Core\Components\Common\Image;
+use Vnnit\Core\Components\Common\Portfolio;
 use Vnnit\Core\Components\Common\Row;
 use Vnnit\Core\Components\Common\Svg;
 use Vnnit\Core\Components\Common\SectionBox;
@@ -202,6 +203,10 @@ return [
             'view'  => 'components.common.section-title',
             'class' => SectionTitle::class
         ],
+        'portfolio' => [
+            'view'  => 'components.common.portfolio',
+            'class' => Portfolio::class
+        ]
     ],
     'bt-components' => [
         'btText' => [
@@ -215,6 +220,10 @@ return [
         'btSubmit' => [
             'view'      => 'components.bootstrap.forms.button',
             'params'    => ['text', 'variant' => '', 'options' => [], 'type' => 'submit', 'btnType' => 'button']
+        ],
+        'btSelect' => [
+            'view'      => 'components.bootstrap.forms.select',
+            'params'    => ['name', 'list', 'selected', 'attributes' => [], 'options' => []]
         ]
     ]
 ];

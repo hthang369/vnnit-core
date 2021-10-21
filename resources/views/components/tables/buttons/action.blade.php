@@ -2,10 +2,12 @@
 <div>
     @foreach ($data['action'] as $item)
         @continue(! with($data, $item->visible))
-        @if (!is_callable($item->renderCustom))
-            <x-dynamic-component :component="$item->renderCustom" :item="$item" :data="$data"/>
+        @if (blank($item->renderCustom))
+            {!! $item->setData($data)->render() !!}
+        @elseif (is_callable($item->renderCustom))
+            {!! with($data, $field->renderCustom) !!}
         @else
-            {!! with($cellData, $field->renderCustom); !!}
+            <x-dynamic-component :component="$item->renderCustom" :item="$item" :data="$data"/>
         @endif
     @endforeach
 </div>

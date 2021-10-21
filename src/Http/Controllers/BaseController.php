@@ -120,7 +120,7 @@ abstract class BaseController extends Controller implements BaseControllerInterf
      */
     public function edit($id) {
         $data = $this->repository->show($id);
-        return $this->responseView(request(), $this->getViewName(__FUNCTION__), $data, $this->getMessageResponse(__FUNCTION__));
+        return $this->responseView(request(), $data, $this->getViewName(__FUNCTION__), $this->getMessageResponse(__FUNCTION__));
     }
 
     /**
@@ -151,7 +151,7 @@ abstract class BaseController extends Controller implements BaseControllerInterf
      */
     public function show($id) {
         $data = $this->repository->show($id);
-        return $this->responseView($this->getViewName(__FUNCTION__), $data, $this->getMessageResponse(__FUNCTION__));
+        return $this->responseView(request(), $data, $this->getViewName(__FUNCTION__), $this->getMessageResponse(__FUNCTION__));
     }
 
     /**

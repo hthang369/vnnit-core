@@ -33,6 +33,21 @@ abstract class BaseDataGridPresenter implements PresenterInterface
     protected $id;
     protected $name;
 
+    public function __construct()
+    {
+        $this->configureButtons();
+    }
+
+    /**
+    * Configure rendered buttons, or add your own
+    *
+    * @return void
+    */
+    protected function configureButtons()
+    {
+        $this->setButtons();
+    }
+
     protected function setColumns()
     {
         return [];
@@ -88,7 +103,6 @@ abstract class BaseDataGridPresenter implements PresenterInterface
 
     protected function parsePresent($results, $total)
     {
-        $this->setButtons();
         return array_merge($this->template, [
             'fields'        => $this->getColumns(),
             'rows'          => method_exists($results, 'items') ? $this->parseRows($results) : $results,
@@ -100,4 +114,52 @@ abstract class BaseDataGridPresenter implements PresenterInterface
         ]);
     }
 
+    protected function editToolbarButton($key, $options)
+    {
+        $this->editButton($key, $options, GenericButton::TYPE_TOOLBAR);
+    }
+
+    protected function editRowButton($key, $options)
+    {
+        $this->editButton($key, $options, GenericButton::TYPE_ROW);
+    }
+
+    private function editButton($key, $options, $type)
+    {
+        $button = $this->getButton($key, $type);
+        if (!is_object($button)) return;
+        $refector = new \ReflectionClass(get_class($button));
+        $attrs = $refector->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+        array_walk($attrs, function($item) use(&$button, $options) {
+            $keyName = $item->getName();
+            if (in_array($keyName, array_keys($options))) {
+                $button->{$keyName} = $options[$keyName];
+            }
+        });
+        $methods = $refector->getMethods(\ReflectionMethod::IS_PUBLIC);
+        array_walk($methods, function($method) use(&$button, $options) {
+            $keyName = $method->getName();
+            if (in_array($keyName, array_keys($options))) {
+                $button->$keyName($options[$keyName]);
+            }
+        });
+    }
+
+    protected function addToolbarButton($key, $options)
+    {
+        $this->addButton($key, $options, GenericButton::TYPE_TOOLBAR);
+    }
+
+    protected function addRowButton($key, $options)
+    {
+        $this->addButton($key, $options, GenericButton::TYPE_ROW);
+    }
+
+    private function addButton($key, $options, $type)
+    {
+        if (!$this->hasButton($key, $type)) {
+            $button = GenericButton::make($options);
+            data_set($this->buttons, "{$type}.{$key}", $button);
+        }
+    }
 }

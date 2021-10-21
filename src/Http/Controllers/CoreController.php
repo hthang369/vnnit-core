@@ -66,9 +66,20 @@ class CoreController extends BaseController
     {
         list($modal, $formData) = $this->repository->formGenerate(route($this->routeName.'.store'), __FUNCTION__);
 
-        $form = $this->formBuilder->create($formData, $modal);
+        $form = $this->formBuilder->create($formData, $modal)->renderForm([], false, true, false);
 
         return $this->renderViewData(compact('modal', 'form'), __FUNCTION__);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     * @return Response|mixed
+     * @throws Exception
+     */
+    public function edit($id) {
+        return $this->show($id);
     }
 
     /**

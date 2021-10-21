@@ -107,6 +107,11 @@ class GenericButton implements Htmlable
     protected $type = 'toolbar';
 
     /**
+     * @var mix
+     */
+    protected $data;
+
+    /**
      * CreateButton constructor.
      * @param array $params
      */
@@ -224,6 +229,12 @@ class GenericButton implements Htmlable
         return $this->dataAttributes;
     }
 
+    public function setData($data)
+    {
+        $this->data = $data;
+        return $this;
+    }
+
     /**
      * Specify the data to be sent to the view
      *
@@ -257,5 +268,11 @@ class GenericButton implements Htmlable
     {
         $prefix = config('vnnit-core.prefix');
         return "{$prefix}::components.grids.buttons";
+    }
+
+    public function mergeClass($arrClass)
+    {
+        $arrs = explode(' ', $this->class);
+        $this->class = array_css_class(array_filter(array_merge($arrs, $arrClass)));
     }
 }
