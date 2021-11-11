@@ -11,7 +11,11 @@ class PictureType extends FormField
     protected function getAttributes()
     {
         return [
-            'attr' => ['class' => 'img-thumbnail'],
+            'attr' => array_filter([
+                'class' => 'img-thumbnail',
+                'width' => $this->getOption('width'),
+                'height' => $this->getOption('height'),
+            ]),
         ];
     }
 }

@@ -84,6 +84,9 @@ trait RendersButtons
             'url' => function($item) {
                 return $this->getCreareUrl();
             },
+            'dataAttributes' => [
+                'loading' => translate('table.loading_text')
+            ],
             'icon' => 'fa-plus-circle',
             'visible' => function($item) {
                 return $this->visibleCreate();
@@ -103,7 +106,8 @@ trait RendersButtons
             'position' => 2,
             'dataAttributes' => [
                 'trigger-pjax' => 1,
-                'pjax-target' => '#'.$this->getId()
+                'pjax-target' => '#'.$this->getId(),
+                'loading' => translate('table.loading_text')
             ],
             'url' => function($item) {
                 return $this->getRefreshUrl();
@@ -129,6 +133,9 @@ trait RendersButtons
             'url' => function($item) {
                 return $this->getEditUrl(data_get($item, 'id'));
             },
+            'dataAttributes' => [
+                'loading' => translate('table.loading_text')
+            ],
             'type' => GenericButton::TYPE_ROW,
             'visible' => function($item) {
                 return $this->visibleEdit($item);
@@ -150,6 +157,9 @@ trait RendersButtons
             'url' => function($item) {
                 return $this->getDetailUrl(data_get($item, 'id'));
             },
+            'dataAttributes' => [
+                'loading' => translate('table.loading_text')
+            ],
             'type' => GenericButton::TYPE_ROW,
             'visible' => function($item) {
                 return $this->visibleDetail($item);
@@ -171,6 +181,9 @@ trait RendersButtons
             'url' => function($item) {
                 return $this->getDeleteUrl(data_get($item, 'id'));
             },
+            'dataAttributes' => [
+                'loading' => translate('table.loading_text')
+            ],
             'type' => GenericButton::TYPE_ROW,
             'visible' => function($item) {
                 return $this->visibleDelete($item);

@@ -11,5 +11,6 @@ return [
     'action'    => 'Action',
     'select'    => 'Select ...',
     'btn_create' => 'Create',
-    'btn_refresh' => 'Refresh'
+    'btn_refresh' => 'Refresh',
+    'loading_text' => 'Loading'
 ];

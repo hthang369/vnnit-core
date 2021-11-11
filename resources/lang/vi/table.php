@@ -11,5 +11,6 @@ return [
     'action'    => 'Hành động',
     'select'    => 'Chọn ...',
     'btn_create' => 'Tạo mới',
-    'btn_refresh' => 'Tải lại'
+    'btn_refresh' => 'Tải lại',
+    'loading_text' => 'Đang tải'
 ];

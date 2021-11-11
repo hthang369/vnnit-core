@@ -5,13 +5,13 @@ class ButtonType extends FormField
 {
     protected function getTemplate()
     {
-        return 'page_or_link';
+        return 'button';
     }
 
     protected function getAttributes()
     {
         return [
-            'class' => 'form-control',
+            'attr' => ['class' => 'btn btn-secondary'],
         ];
     }
 }

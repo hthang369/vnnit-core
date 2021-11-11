@@ -11,7 +11,7 @@ class StaticType extends FormField
     protected function getAttributes()
     {
         return [
-            'attr' => ['class' => 'form-control-plaintext'],
+            'attr' => ['class' => ['form-control-plaintext']],
         ];
     }
 

@@ -117,10 +117,10 @@ abstract class FormField
     private function allDefaults()
     {
         return [
-            'wrapper' => ['class' => $this->parent->getConfig('defaults.wrapper_class')],
-            'attr' => ['class' => $this->parent->getConfig('defaults.field_class')],
+            'wrapper' => ['class' => [$this->parent->getConfig('defaults.wrapper_class')]],
+            'attr' => ['class' => [$this->parent->getConfig('defaults.field_class')]],
             'help_block' => ['text' => null, 'tag' => 'p', 'attr' => [
-                'class' => $this->parent->getConfig('defaults.help_block_class')
+                'class' => [$this->parent->getConfig('defaults.help_block_class')]
             ]],
             'value' => null,
             'default_value' => null,
@@ -129,9 +129,9 @@ abstract class FormField
             'field_show' => true,
             'error_show' => false,
             'is_child' => false,
-            'label_attr' => ['class' => $this->parent->getConfig('defaults.label_class')],
+            'label_attr' => ['class' => [$this->parent->getConfig('defaults.label_class')]],
             'label_for' => '',
-            'errors' => ['class' => $this->parent->getConfig('defaults.error_class')],
+            'errors' => ['class' => [$this->parent->getConfig('defaults.error_class')]],
             'rules' => [],
             'error_messages' => []
         ];
@@ -156,13 +156,34 @@ abstract class FormField
     {
         $this->options = $this->parent->mergeOptions($this->allDefaults(), $this->getDefaults());
 
-        $this->options = array_merge($this->options, $options);
+        $this->options = $this->parent->mergeOptions($this->options, $this->getAttributes());
 
-        $this->options = array_merge($this->options, $this->getAttributes());
+        $this->options = $this->parent->mergeOptions($this->options, $this->setupOptions($options));
+
+        $this->setupAttrClass();
 
         $this->setOption('label_for', $this->name);
 
         $this->setupLabel();
+    }
+
+    private function setupOptions(&$options)
+    {
+        $this->getAttrOption($options, 'wrapper.class');
+        $this->getAttrOption($options, 'attr.class');
+        $this->getAttrOption($options, 'help_block.attr.class');
+        $this->getAttrOption($options, 'label_attr.class');
+        $this->getAttrOption($options, 'errors.class');
+
+        return $options;
+    }
+
+    private function getAttrOption(&$options, $key)
+    {
+        $data = collect(data_get($options, $key));
+        if ($data->count() == 0) return;
+        $values = $data->prepend('')->filter()->all();
+        data_set($options, $key, $values);
     }
 
     /**
@@ -274,6 +295,15 @@ abstract class FormField
     public function getOptions()
     {
         return $this->options;
+    }
+
+    private function setupAttrClass()
+    {
+        $this->setOption('wrapper.class', array_css_class($this->getOption('wrapper.class')));
+        $this->setOption('attr.class', array_css_class($this->getOption('attr.class')));
+        $this->setOption('help_block.attr.class', array_css_class($this->getOption('help_block.attr.class')));
+        $this->setOption('label_attr.class', array_css_class($this->getOption('label_attr.class')));
+        $this->setOption('errors.class', array_css_class($this->getOption('errors.class')));
     }
 
     /**

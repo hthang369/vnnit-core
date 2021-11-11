@@ -23,12 +23,12 @@ class Button extends Component
     public function __construct(
         $variant = 'secondary',
         $type = 'button',
-        $text = '',
+        $text = null,
         $size = '',
         $icon = ''
     )
     {
-        $this->text = $text ?? '';
+        $this->text = $text ?? null;
         $this->btnType = $this->type = $type ?? '';
         $this->variant = $variant ?? '';
         if (!blank($icon)) {
