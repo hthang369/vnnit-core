@@ -24,6 +24,10 @@ class GenericButton implements Htmlable
      */
     protected $title = '';
     /**
+     * @var string
+     */
+    protected $id = '';
+    /**
      * @var integer
      */
     protected $position = null;

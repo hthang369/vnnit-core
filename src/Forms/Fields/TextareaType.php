@@ -8,7 +8,7 @@ class TextareaType extends FormField
         return 'textarea';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         return [
             'class' => 'form-control',

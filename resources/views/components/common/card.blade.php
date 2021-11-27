@@ -3,7 +3,7 @@
         {!! $header !!}
     @else
         @php($headerCompo = "{$prefix}::common.card-header")
-        <x-dynamic-component :component="$headerCompo" :text="$header" />
+        <x-dynamic-component :component="$headerCompo" :text="$header" :dark-mode="$darkMode" />
     @endif
 
     @if ($imgTop)

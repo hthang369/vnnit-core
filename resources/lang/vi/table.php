@@ -12,5 +12,6 @@ return [
     'select'    => 'Chọn ...',
     'btn_create' => 'Tạo mới',
     'btn_refresh' => 'Tải lại',
-    'loading_text' => 'Đang tải'
+    'loading_text' => 'Đang tải',
+    'action_question_delete' => 'Bạn có chắc chắn muốn xóa?'
 ];

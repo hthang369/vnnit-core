@@ -17,6 +17,7 @@ class Card extends Component
     public $imgSrc;
     public $imgTop;
     public $imgBottom;
+    public $darkMode;
 
     /**
      * The component alias name.
@@ -35,7 +36,8 @@ class Card extends Component
         $bodyClass = '',
         $imgSrc = null,
         $imgTop = true,
-        $imgBottom = false
+        $imgBottom = false,
+        $darkMode = false
     )
     {
         $this->prefix = config('vnnit-core.prefix');
@@ -46,6 +48,7 @@ class Card extends Component
         $this->imgSrc = $imgSrc;
         $this->imgTop = $imgTop;
         $this->imgBottom = $imgBottom;
+        $this->darkMode = $darkMode;
         $this->bodyAttr = ['class' => Classes::get(['card-body', $bodyClass])];
         $this->attrs = ['class' => Classes::get(['card', $class])];
     }

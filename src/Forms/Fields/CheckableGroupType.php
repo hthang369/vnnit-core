@@ -16,7 +16,7 @@ class CheckableGroupType extends FormField
         return 'checkable-group';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         $attr = $this->getOption('attr');
         $attr = array_merge($attr, ['class' => 'custom-control-input']);

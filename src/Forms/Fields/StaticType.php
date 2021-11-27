@@ -8,7 +8,7 @@ class StaticType extends FormField
         return 'static';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         return [
             'attr' => ['class' => ['form-control-plaintext']],

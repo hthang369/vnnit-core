@@ -8,7 +8,7 @@ class MapType extends FormField
         return 'map';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         return [
             'attr' => ['class' => 'embed-responsive-item'],

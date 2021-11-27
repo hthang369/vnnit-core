@@ -78,7 +78,7 @@ abstract class FormField
     protected $showError = false;
 
     abstract protected function getTemplate();
-    abstract protected function getAttributes();
+    abstract protected function getAttributes(array $options = []);
 
     public function __construct($name, $type, Form $parent, array $options = [])
     {
@@ -156,7 +156,7 @@ abstract class FormField
     {
         $this->options = $this->parent->mergeOptions($this->allDefaults(), $this->getDefaults());
 
-        $this->options = $this->parent->mergeOptions($this->options, $this->getAttributes());
+        $this->options = $this->parent->mergeOptions($this->options, $this->getAttributes($options));
 
         $this->options = $this->parent->mergeOptions($this->options, $this->setupOptions($options));
 
@@ -265,7 +265,7 @@ abstract class FormField
         $closure = $this->valueClosure;
 
         if ($closure instanceof \Closure) {
-            $value = $closure($value ?: null);
+            $value = $closure($this, $value ?: null);
         }
 
         if (!$this->isValidValue($value)) {

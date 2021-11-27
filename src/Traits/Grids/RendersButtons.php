@@ -131,7 +131,7 @@ trait RendersButtons
             'title' => translate('table.btn_edit'),
             'renderCustom' => "{$prefix}::tables.buttons.action_edit",
             'url' => function($item) {
-                return $this->getEditUrl(data_get($item, 'id'));
+                return $this->getEditUrl([data_get($item, 'id'), 'ref' => $this->getId()]);
             },
             'dataAttributes' => [
                 'loading' => translate('table.loading_text')
@@ -176,13 +176,18 @@ trait RendersButtons
             'variant' => 'danger',
             'position' => 3,
             'icon' => 'fa fa-trash',
+            'class' => 'data-remote',
             'title' => translate('table.btn_delete'),
-            'renderCustom' => "{$prefix}::tables.buttons.action_destroy",
+            // 'renderCustom' => "{$prefix}::tables.buttons.action_destroy",
             'url' => function($item) {
                 return $this->getDeleteUrl(data_get($item, 'id'));
             },
             'dataAttributes' => [
-                'loading' => translate('table.loading_text')
+                'loading' => translate('table.loading_text'),
+                'trigger-confirm' => 1,
+                'confirmation-msg' => translate('table.action_question_delete'),
+                'method' => 'DELETE',
+                'pjax-target' => $this->getId()
             ],
             'type' => GenericButton::TYPE_ROW,
             'visible' => function($item) {
@@ -218,7 +223,7 @@ trait RendersButtons
 
     protected function getCreareUrl()
     {
-        return route($this->getSectionCode().'.create');
+        return route($this->getSectionCode().'.create', ['ref' => $this->getId()]);
     }
     protected function getRefreshUrl()
     {

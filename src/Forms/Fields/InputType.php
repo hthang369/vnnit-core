@@ -10,7 +10,7 @@ class InputType extends FormField
         return 'input';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         return [
             'label_show' => !str_is($this->type, Field::HIDDEN),

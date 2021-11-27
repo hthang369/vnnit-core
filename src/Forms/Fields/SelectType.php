@@ -8,10 +8,10 @@ class SelectType extends FormField
         return 'select';
     }
 
-    protected function getAttributes()
+    protected function getAttributes(array $options = [])
     {
         $attr = $this->getOption('attr');
-        $attr = array_merge($attr, ['placeholder' => $this->getOption('empty_value')]);
+        $attr = array_merge($attr, ['placeholder' => $options['empty_value']]);
         return [
             'attr' => $attr,
         ];

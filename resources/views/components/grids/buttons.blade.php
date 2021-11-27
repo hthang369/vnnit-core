@@ -2,6 +2,9 @@
     <a name="{{$key}}" class="{{$class}}"
         href="{{ with($data ?? '', $url) }}"
         title="{{$title}}"
+        @if (!empty($id))
+            id="{{$id}}"
+        @endif
         @foreach ($dataAttributes as $attr => $val)
             data-{{$attr}}="{{$val}}"
         @endforeach

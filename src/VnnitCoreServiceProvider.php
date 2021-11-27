@@ -4,6 +4,7 @@ namespace Vnnit\Core;
 
 use Collective\Html\FormFacade as Form;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Route;
 use Vnnit\Core\Support\CommonHelper;
 use Vnnit\Core\Support\FileManagementService;
 use Vnnit\Core\Support\ModalHelper;
@@ -19,7 +20,8 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
     protected $publishConfigs = [
         'vnnit-core' => 'config.php',
         'permission' => 'permission.php',
-        'form-builder' => 'form-builder.php'
+        'form-builder' => 'form-builder.php',
+        'file-manager' => 'file-manager.php'
     ];
 
     protected $moduleNamespace = 'Vnnit\\Core\\';
@@ -51,6 +53,12 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
                 ], 'config');
             }
         }
+
+        // if (config('lfm.use_package_routes')) {
+            Route::group(['prefix' => 'admin/filemanager', 'middleware' => ['web', 'auth']], function () {
+                \Vnnit\Core\Plugins\FileManager\Lfm::routes();
+            });
+        // }
     }
 
     private function loadHelperFile()
