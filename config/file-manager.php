@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -17,18 +18,36 @@ return [
     |
      */
 
-    'allow_private_folder'     => true,
-
     // Flexible way to customize client folders accessibility
     // If you want to customize client folders, publish tag="lfm_handler"
     // Then you can rewrite userField function in App\Handler\ConfigHandler class
     // And set 'user_field' to App\Handler\ConfigHandler::class
     // Ex: The private folder of user will be named as the user id.
-    'private_folder_name'      => UniSharp\LaravelFilemanager\Handlers\ConfigHandler::class,
+    'folder_list'              => [
+        'upload' => [
+            'name'                => 'Upload',
+            'allow_access_folder' => true,
+            'folder_name'         => 'upload',
+            'order'               => 1
+        ],
+        'user' => [
+            'name'                => 'User',
+            'allow_access_folder' => false,
+            'folder_name'         => \Vnnit\Core\Plugins\FileManager\Handlers\ConfigHandler::class,
+            'order'               => 2
+        ],
+        'share' => [
+            'name'                => 'Share',
+            'allow_access_folder' => false,
+            'folder_name'         => 'shares',
+            'order'               => 3
+        ]
+    ],
 
-    'allow_shared_folder'      => true,
-
-    'shared_folder_name'       => 'shares',
+    'storage_link'             => [
+        'upload/images'    => 'images',
+        'upload/files'     => 'files'
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -38,7 +57,7 @@ return [
 
     'folder_categories'        => [
         'all' => [
-            'folder_name'  => 'upload',
+            'folder_name'  => '',
             'startup_view' => 'list',
             'max_size'     => 50000,
             'valid_mime'   => [

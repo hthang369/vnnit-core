@@ -5,6 +5,8 @@ namespace Vnnit\Core;
 use Collective\Html\FormFacade as Form;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Vnnit\Core\Plugins\FileManager\LfmServiceProvider;
+use Vnnit\Core\Plugins\Widgets\WidgetServiceProvider;
 use Vnnit\Core\Support\CommonHelper;
 use Vnnit\Core\Support\FileManagementService;
 use Vnnit\Core\Support\ModalHelper;
@@ -53,12 +55,6 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
                 ], 'config');
             }
         }
-
-        // if (config('lfm.use_package_routes')) {
-            Route::group(['prefix' => 'admin/filemanager', 'middleware' => ['web', 'auth']], function () {
-                \Vnnit\Core\Plugins\FileManager\Lfm::routes();
-            });
-        // }
     }
 
     private function loadHelperFile()
@@ -71,6 +67,8 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
         foreach($this->publishConfigs as $key => $file) {
             $this->mergeConfigFrom(__DIR__ . '/../config/'.$file, $key);
         }
+        $this->app->register(LfmServiceProvider::class);
+        $this->app->register(WidgetServiceProvider::class);
         parent::register();
     }
 

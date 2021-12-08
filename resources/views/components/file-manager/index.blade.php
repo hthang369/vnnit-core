@@ -1,3 +1,10 @@
+@push('styles')
+<link rel="stylesheet" href="{{ asset('vendor/filemanager/css/cropper.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/filemanager/css/dropzone.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/filemanager/css/mime-icons.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/filemanager/css/file-manager.css') }}">
+@endpush
+
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark" id="nav">
     <a class="navbar-brand invisible-lg d-none d-lg-inline" id="to-previous">
       <i class="fa fa-arrow-left fa-fw"></i>
@@ -57,43 +64,45 @@
     </div>
 </nav>
 
-<nav class="bg-dark fixed-bottom border-top d-none" id="actions">
-    <a data-action="open" data-multiple="false"><i class="fa fa-folder-open mr-1"></i>{{ translate('lfm.btn-open') }}</a>
-    <a data-action="preview" data-multiple="true"><i class="fa fa-image mr-1"></i>{{ translate('lfm.menu-view') }}</a>
-    <a data-action="use" data-multiple="true"><i class="fa fa-check mr-1"></i>{{ translate('lfm.btn-confirm') }}</a>
+<nav class="bg-dark d-flex fixed-bottom border-top d-none" id="actions">
+    <a class="px-2 py-1" data-action="open" data-multiple="false"><i class="fa fa-folder-open mr-1"></i>{{ translate('lfm.btn-open') }}</a>
+    <a class="px-2 py-1" data-action="preview" data-multiple="true"><i class="fa fa-image mr-1"></i>{{ translate('lfm.menu-view') }}</a>
+    <a class="px-2 py-1" data-action="use" data-multiple="true"><i class="fa fa-check mr-1"></i>{{ translate('lfm.btn-confirm') }}</a>
 </nav>
 
-<div class="row">
-    <div id="tree" class="col-3"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div id="tree" class="col-3 bg-dark"></div>
 
-    <div id="main" class="col-9">
-      <div id="alerts"></div>
+        <div id="main" class="col-9">
+        <div id="alerts"></div>
 
-      <nav aria-label="breadcrumb" class="d-none d-lg-block" id="breadcrumbs">
-        <ol class="breadcrumb bg-secondary">
-          <li class="breadcrumb-item invisible">Home</li>
-        </ol>
-      </nav>
+        <nav aria-label="breadcrumb" class="d-none d-lg-block" id="breadcrumbs">
+            <ol class="breadcrumb bg-secondary">
+            <li class="breadcrumb-item invisible">Home</li>
+            </ol>
+        </nav>
 
-      <div id="empty" class="text-white d-none">
-        <i class="fa fa-folder-open"></i>
-        {{ translate('lfm.message-empty') }}
-      </div>
-
-      <div id="content"></div>
-      <div id="pagination"></div>
-
-      <a id="item-template" class="d-none">
-        <div class="square"></div>
-
-        <div class="info">
-          <div class="item_name text-truncate"></div>
-          <time class="text-muted font-weight-light text-truncate"></time>
+        <div id="empty" class="text-white d-none">
+            <i class="fa fa-folder-open"></i>
+            {{ translate('lfm.message-empty') }}
         </div>
-      </a>
-    </div>
 
-    <div id="fab"></div>
+        <div id="content"></div>
+        <div id="pagination"></div>
+
+        <a id="item-template" class="d-none">
+            <div class="square"></div>
+
+            <div class="info">
+            <div class="item_name text-truncate"></div>
+            <time class="text-muted font-weight-light text-truncate"></time>
+            </div>
+        </a>
+        </div>
+
+        <div id="fab"></div>
+    </div>
 </div>
 
 <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -176,3 +185,38 @@
       <span class="sr-only">Next</span>
     </a>
 </div>
+
+@push('scripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="{{ asset('vendor/laravel-filemanager/js/cropper.min.js') }}"></script>
+<script src="{{ asset('vendor/laravel-filemanager/js/dropzone.min.js') }}"></script>
+<script>
+var lang = {!! json_encode(trans(config('vnnit-core.prefix').'::lfm')) !!};
+</script>
+<script src="{{ asset('vendor/filemanager/js/file-manager.js') }}"></script>
+<script>
+Dropzone.options.uploadForm = {
+    paramName: "upload[]", // The name that will be used to transfer the file
+    uploadMultiple: false,
+    parallelUploads: 5,
+    timeout:0,
+    clickable: '#upload-button',
+    dictDefaultMessage: lang['message-drop'],
+    init: function() {
+    var _this = this; // For the closure
+    this.on('success', function(file, response) {
+        if (response == 'OK') {
+        loadFolders();
+        } else {
+        this.defaultOptions.error(file, response.join('\n'));
+        }
+    });
+    },
+    headers: {
+    'Authorization': 'Bearer ' + getUrlParam('token')
+    },
+    acceptedFiles: "{{ implode(',', $helper->availableMimeTypes()) }}",
+    maxFilesize: ({{ $helper->maxUploadSize() }} / 1000)
+}
+</script>
+@endpush

@@ -75,18 +75,14 @@ class Lfm
 
     public function allowFolderType($type)
     {
-        if ($type == 'user') {
-            return $this->allowMultiUser();
-        } else {
-            return $this->allowShareFolder();
-        }
+        return $this->config("folder_list.{$type}.allow_access_folder");
     }
 
     public function getCategoryName()
     {
         $type = $this->currentLfmType();
 
-        return $this->config('folder_categories.' . $type . '.folder_name', 'files');
+        return $this->config('folder_categories.' . $type . '.folder_name', '');
     }
 
     /**
@@ -125,7 +121,7 @@ class Lfm
 
     public function getUserSlug()
     {
-        $config = $this->config('private_folder_name');
+        $config = $this->config('folder_list.user.folder_name');
 
         if (is_callable($config)) {
             return call_user_func($config);
@@ -141,16 +137,16 @@ class Lfm
     public function getRootFolder($type = null)
     {
         if (is_null($type)) {
-            $type = 'share';
-            if ($this->allowFolderType('user')) {
-                $type = 'user';
-            }
+            $list_folder = array_keys(array_sort($this->config('folder_list'), 'order'));
+            $type = head(array_filter($list_folder, function($item) {
+                return $this->allowFolderType($item);
+            }));
         }
 
         if ($type === 'user') {
             $folder = $this->getUserSlug();
         } else {
-            $folder = $this->config('shared_folder_name');
+            $folder = $this->config("folder_list.{$type}.folder_name");
         }
 
         // the slash is for url, dont replace it with directory seperator
@@ -180,31 +176,6 @@ class Lfm
     public function getPaginationPerPage()
     {
         return $this->config("paginator.perPage", 30);
-    }
-
-    /**
-     * Check if users are allowed to use their private folders.
-     *
-     * @return bool
-     */
-    public function allowMultiUser()
-    {
-        return $this->config('allow_private_folder') === true;
-    }
-
-    /**
-     * Check if users are allowed to use the shared folder.
-     * This can be disabled only when allowMultiUser() is true.
-     *
-     * @return bool
-     */
-    public function allowShareFolder()
-    {
-        if (! $this->allowMultiUser()) {
-            return true;
-        }
-
-        return $this->config('allow_shared_folder') === true;
     }
 
     /**

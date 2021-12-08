@@ -85,7 +85,12 @@ class LfmPath
 
     public function url()
     {
-        return $this->storage->url($this->path('working_dir'));
+        $path = ltrim($this->path('working_dir'), Lfm::DS);
+        $dir = pathinfo($path, PATHINFO_DIRNAME);
+        $storage_link = array_where($this->helper->config("storage_link"), function($item, $key) use($dir) {
+            return starts_with($dir, $key);
+        });
+        return $this->storage->url(str_replace(key($storage_link), current($storage_link), $path));
     }
 
     public function folders()

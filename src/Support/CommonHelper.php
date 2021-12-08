@@ -17,14 +17,11 @@ class CommonHelper
         return trim(head($routeName));
     }
 
-    public function callApi($method, $url, $params = [])
+    public function callApi($method, $url, $params = [], $headers = [])
     {
-        $fullUrl = config('laka.api_address')."{$url}";
-        $response = Http::withHeaders([
+        $response = Http::withHeaders(array_merge([
             'Accept' => 'application/json',
-            // 'Content-Type' => 'application/x-www-form-urlencoded',
-            'token' => config('laka.api_token')
-        ])->{$method}($fullUrl, $params);
+        ], $headers))->{$method}($url, $params);
 
         if ($response->ok())
             return $response->collect();

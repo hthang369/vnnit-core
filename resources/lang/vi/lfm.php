@@ -30,6 +30,8 @@ return [
     'title-type'        => 'Kiểu',
     'title-modified'    => 'Sửa đổi',
     'title-action'      => 'Hoạt động',
+    'title-file'       => 'Tập tin',
+    'title-image'      => 'Hình ảnh',
 
     'type-folder'       => 'Thư mục',
 

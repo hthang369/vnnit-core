@@ -54,6 +54,12 @@ return [
     'search' => [
         'param' => 'q'
     ],
+    'plugins' => [
+        'widget' => [
+            // table: luu thong tin widget vao DB | view : luu thong tin vao view
+            'object' => 'table'
+        ]
+    ],
     'components' => [
         'datepicker' => [
             'view'  => 'components.forms.datepicker',

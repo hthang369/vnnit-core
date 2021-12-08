@@ -104,3 +104,40 @@ if (!function_exists('form')) {
         return $form->renderForm($options);
     }
 }
+
+if (!function_exists('size_format')) {
+    function size_format($size, $format = null) {
+        $bytes = sprintf('%u', $size);
+        $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $out = 'B';
+        if (is_null($format)) {
+            foreach($units as $key => $value) {
+                $diff = pow(1024, $key);
+                if ($size > $diff) {
+                    $out = $value;
+                    $bytes = round($size / $diff, 2);
+                } else break;
+            }
+        } else {
+            $diff = pow(1024, array_search($format, $units));
+            $out = $format;
+            $bytes = round($size / $diff, 2);
+        }
+        $round = round(fmod($bytes, 2));
+        return sprintf("%.{$round}f %s", $bytes, $out);
+    }
+}
+
+if (!function_exists('disk_free_info')) {
+    function disk_free_info($directory = '/', $format = null) {
+        $free_disk = disk_free_space($directory);
+        return size_format($free_disk, $format);
+    }
+}
+
+if (!function_exists('disk_total_info')) {
+    function disk_total_info($directory = '/', $format = null) {
+        $total_disk = disk_total_space($directory);
+        return size_format($total_disk, $format);
+    }
+}

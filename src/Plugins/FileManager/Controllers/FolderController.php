@@ -2,6 +2,9 @@
 
 namespace Vnnit\Core\Plugins\FileManager\Controllers;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class FolderController extends LfmController
 {
     /**
@@ -11,10 +14,17 @@ class FolderController extends LfmController
      */
     public function getFolders()
     {
-        $folder_types = array_filter(['user', 'share'], function ($type) {
+        $folder_types = array_filter(array_keys(config('file-manager.folder_list')), function ($type) {
             return $this->helper->allowFolderType($type);
         });
-
+        // $directory = base_path();
+        // $size = 0;
+        // foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file){
+        //     $size+=$file->getSize();
+        // }
+        $total_disk = disk_total_space('/');
+        $free_disk = disk_free_space('/');
+        $used_disk = $total_disk - $free_disk;
         return $this->view('tree')
             ->with([
                 'root_folders' => array_map(function ($type) use ($folder_types) {
@@ -27,6 +37,8 @@ class FolderController extends LfmController
                         'has_next' => ! ($type == end($folder_types)),
                     ];
                 }, $folder_types),
+                'total_disk' => $total_disk,
+                'used_disk' => $used_disk
             ]);
     }
 
