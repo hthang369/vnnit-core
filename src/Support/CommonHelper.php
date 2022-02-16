@@ -50,24 +50,32 @@ class CommonHelper
         $dropdownClass = $dropdown ? 'dropdown-item' : $class;
         $dataTree->each(function($item) use(&$menu, $class, $dropdownClass, $dropdown, $callback) {
             if (data_get($item, 'visiable', true)) {
-                $childrens = data_get($item, 'children');
+                $childrens = collect(data_get($item, 'children'));
                 if ($childrens && $childrens->count() > 0) {
                     $options = [];
                     if (is_callable($callback)) {
                         $options = with($item, $callback);
                     }
-                    $menu->dropdown(data_get($item, 'menu_title'), function ($subMenu) use ($childrens, $dropdownClass, $dropdown, $callback) {
+                    $menu->dropdown(data_get($item, 'title'), function ($subMenu) use ($childrens, $dropdownClass, $dropdown, $callback) {
                         $this->renderElementMenu($subMenu, $childrens, $dropdownClass, $dropdown, $callback);
-                    }, $options);
+                    }, null, array_merge([
+                        'class' => $class,
+                        'icon' => data_get($item, 'icon'),
+                        'id' => data_get($item, 'id'),
+                        'active' => data_get($item, 'actived', false)
+                    ], $options));
                 } else {
                     $options = [];
+                    $menu_link = data_get($item, 'link');
                     if (is_callable($callback)) {
                         $options = with($item, $callback);
+                        $menu_link = data_get($options, 'link', $menu_link);
                     }
-                    $menu->url(data_get($item, 'menu_link'), data_get($item, 'menu_title'),
+                    $menu->url($menu_link, data_get($item, 'title'),
                         array_merge([
                             'class' => $class,
-                            'icon' => data_get($item, 'menu_icon'),
+                            'icon' => data_get($item, 'icon'),
+                            'id' => data_get($item, 'id'),
                             'active' => data_get($item, 'actived', false)
                         ], $options));
                 }

@@ -31,10 +31,14 @@ class TableSort extends Component
      *
      * @return void
      */
-    public function __construct($field)
+    public function __construct($field, $except = null)
     {
         $this->field = $field;
-        $this->hrefUrl = request()->fullUrlWithQuery([
+        $request = request();
+        foreach($except as $item) {
+            $request->query->remove($item);
+        }
+        $this->hrefUrl = $request->fullUrlWithQuery([
             'sort' => $this->field,
             'direction' => str_is(request('sort'), $this->field) ? data_get($this->direction, request('direction')) : 'asc'
         ]);

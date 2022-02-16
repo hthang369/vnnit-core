@@ -19,6 +19,13 @@ abstract class BaseGridPresenter extends BaseDataGridPresenter implements Htmlab
 
     protected $indexRouteName = null;
 
+    /**
+     * The array of except query.
+     *
+     * @var array
+     */
+    protected $except = [];
+
     private function getIndexOptions()
     {
         return array_merge(['sortable' => false], $this->indexColumnOptions);
@@ -60,5 +67,10 @@ abstract class BaseGridPresenter extends BaseDataGridPresenter implements Htmlab
     protected function visibleDelete($item)
     {
         return user_can("delete_{$this->getSectionCode()}");
+    }
+
+    public function getExcept()
+    {
+        return $this->except;
     }
 }

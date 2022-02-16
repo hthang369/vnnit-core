@@ -22,6 +22,7 @@ use Vnnit\Core\Components\Common\Link;
 use Vnnit\Core\Components\Common\Media;
 use Vnnit\Core\Components\Common\Image;
 use Vnnit\Core\Components\Common\Portfolio;
+use Vnnit\Core\Components\Common\PortfolioProducts;
 use Vnnit\Core\Components\Common\Row;
 use Vnnit\Core\Components\Common\Svg;
 use Vnnit\Core\Components\Common\SectionBox;
@@ -212,6 +213,10 @@ return [
         'portfolio' => [
             'view'  => 'components.common.portfolio',
             'class' => Portfolio::class
+        ],
+        'portfolio-products' => [
+            'view'  => 'components.common.portfolio-products',
+            'class' => PortfolioProducts::class
         ]
     ],
     'bt-components' => [

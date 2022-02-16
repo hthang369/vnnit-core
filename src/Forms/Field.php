@@ -9,12 +9,14 @@ class Field
     const TEXT = 'text';
     const TEXTAREA = 'textarea';
     const SELECT = 'select';
+    const MULTI_SELECT = 'multi-select';
     const CHOICE = 'choice';
     const CHECKBOX = 'checkbox';
     const RADIO = 'radio';
     const PASSWORD = 'password';
     const HIDDEN = 'hidden';
     const FILE = 'file';
+    const MULTI_FILE = 'multi-file';
     const STATIC = 'static';
     const CHECKBOX_GROUP = 'checkbox-group';
     const RADIO_GROUP = 'radio-group';

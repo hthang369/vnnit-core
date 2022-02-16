@@ -1,0 +1,15 @@
+<?php
+
+namespace Modules\$MODULE$\Entities;
+
+use Vnnit\Core\Entities\BaseModel;
+
+class $CLASSNAME$Model extends BaseModel
+{
+    protected $table = '$LOWER_NAME$';
+
+    protected $fillable = [
+        'name',
+        'age'
+    ];
+}

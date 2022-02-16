@@ -23,6 +23,7 @@ class BaseModel extends Model
      */
     protected $fillableColumns = ['*'];
     protected $auth_user = null;
+    protected $isAuthUser = false;
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
@@ -32,11 +33,13 @@ class BaseModel extends Model
 
     public function setCreatedUpdatedUsers()
     {
-        if ($this->exists) {
-            $this->setAttributeValue(static::UPDATED_USER, $this->auth_user);
-        } else {
-            $this->setAttributeValue(static::CREATED_USER, $this->auth_user);
-            $this->setAttributeValue(static::UPDATED_USER, $this->auth_user);
+        if ($this->isAuthUser) {
+            if ($this->exists) {
+                $this->setAttributeValue(static::UPDATED_USER, $this->auth_user);
+            } else {
+                $this->setAttributeValue(static::CREATED_USER, $this->auth_user);
+                $this->setAttributeValue(static::UPDATED_USER, $this->auth_user);
+            }
         }
     }
 

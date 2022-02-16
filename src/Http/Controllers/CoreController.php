@@ -91,7 +91,7 @@ class CoreController extends BaseController
     {
         $base = $this->repository->find($id);
 
-        list($modal, $formData) = $this->repository->formGenerate(route($this->routeName.'.update', data_get($base, 'id', $id)), 'update', ['method' => 'patch']);
+        list($modal, $formData) = $this->repository->formGenerate(route($this->routeName.'.update', data_get($base, 'id', $id)), 'update', ['method' => 'put', 'model' => $base]);
 
         $form = $this->formBuilder->create($formData, [
             'model' => $base

@@ -43,7 +43,7 @@ if (!function_exists('attributes_get')) {
         $attr = [];
         foreach ($attributes as $key => $value) {
             if (is_string($key))
-                array_push($attr, sprintf('%s=%s', $key, $value));
+                array_push($attr, sprintf('%s="%s"', $key, $value));
             else
                 array_push($attr, $value);
         }
