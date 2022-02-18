@@ -11,7 +11,6 @@ use Vnnit\Core\Responses\BaseResponse;
 
 class CoreController extends BaseController
 {
-    private $routeName;
     protected $formBuilder;
 
     public function __construct(CoreRepository $repository, BaseValidator $validator, BaseResponse $response)
@@ -28,11 +27,6 @@ class CoreController extends BaseController
     public function setPathView($value)
     {
         $this->setViewName($value);
-    }
-
-    public function setRouteName($value)
-    {
-        $this->routeName = $value;
     }
 
     public function renderView($results, $viewName, $customName = null, $data = [])

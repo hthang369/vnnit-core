@@ -28,7 +28,7 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
 
     protected $moduleNamespace = 'Vnnit\\Core\\';
     protected $modulePath = __DIR__;
-    protected $commandPath = __DIR__.'\\Console';
+    protected $commandPath = __DIR__.DIRECTORY_SEPARATOR.'Console';
 
     public function boot()
     {

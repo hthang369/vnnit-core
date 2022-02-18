@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Vnnit\Core\Forms\Form;
 
 if (!function_exists('get_classes')) {
@@ -18,6 +19,27 @@ if (!function_exists('get_classes')) {
         }
 
         return implode($spacer, $result);
+    }
+}
+
+if (!function_exists('user_get')) {
+    function user_get($key = null)
+    {
+        $user = null;
+        if (Auth::check()) {
+            $user = Auth::user();
+        }
+        if (!is_null($key) && !is_null($user)) {
+            return object_get($user, $key);
+        }
+        return $user;
+    }
+}
+
+if (!function_exists('user_can')) {
+    function user_can($action)
+    {
+        return (Auth::check() && Auth::user()->can($action));
     }
 }
 
@@ -139,5 +161,15 @@ if (!function_exists('disk_total_info')) {
     function disk_total_info($directory = '/', $format = null) {
         $total_disk = disk_total_space($directory);
         return size_format($total_disk, $format);
+    }
+}
+
+if (!function_exists('vnn_asset')) {
+    function vnn_asset($path) {
+        $pathImage = asset($path);
+        if (!file_exists($pathImage)) {
+            $pathImage = asset(config('filesystems.disks.public.path_image').$path);
+        }
+        return $pathImage;
     }
 }

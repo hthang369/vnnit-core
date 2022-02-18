@@ -24,6 +24,7 @@ class BaseModel extends Model
     protected $fillableColumns = ['*'];
     protected $auth_user = null;
     protected $isAuthUser = false;
+    protected $isLoadMutatedAttributes = false;
 
     public function __construct(array $attributes = []) {
         parent::__construct($attributes);
@@ -74,5 +75,13 @@ class BaseModel extends Model
     public function newEloquentBuilder($query)
     {
         return new BaseBuilder($query);
+    }
+
+    protected function addMutatedAttributesToArray(array $attributes, array $mutatedAttributes)
+    {
+        if ($this->isLoadMutatedAttributes) {
+            return parent::addMutatedAttributesToArray($attributes, $mutatedAttributes);
+        }
+        return $attributes;
     }
 }

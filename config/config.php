@@ -226,11 +226,11 @@ return [
         ],
         'btButton' => [
             'view'      => 'components.bootstrap.forms.button',
-            'params'    => ['text', 'variant' => '', 'options' => [], 'type' => 'button', 'btnType' => 'button']
+            'params'    => ['text', 'variant' => '', 'options' => [], 'action' => '', 'sectionCode' => '', 'type' => 'button', 'btnType' => 'button']
         ],
         'btSubmit' => [
             'view'      => 'components.bootstrap.forms.button',
-            'params'    => ['text', 'variant' => '', 'options' => [], 'type' => 'submit', 'btnType' => 'button']
+            'params'    => ['text', 'variant' => '', 'options' => [], 'action' => '', 'sectionCode' => '', 'type' => 'submit', 'btnType' => 'button']
         ],
         'btSelect' => [
             'view'      => 'components.bootstrap.forms.select',

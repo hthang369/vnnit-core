@@ -103,6 +103,7 @@ abstract class BaseDataGridPresenter implements PresenterInterface
 
     protected function parsePresent($results, $total)
     {
+        $this->setDefaultButtonsToGenerate();
         return array_merge($this->template, [
             'fields'        => $this->getColumns(),
             'rows'          => method_exists($results, 'items') ? $this->parseRows($results) : $results,

@@ -85,10 +85,7 @@ class CommonHelper
 
     public function getPictureImageFormPath($path, $width = null, $height = null, $altName = '')
     {
-        $pathImage = asset($path);
-        if (!file_exists($pathImage)) {
-            $pathImage = asset(config('filesystems.disks.public.path_image').$path);
-        }
+        $pathImage = vnn_asset($path);
         if (blank($altName)) {
             $altName = pathinfo($pathImage, PATHINFO_FILENAME);
         }

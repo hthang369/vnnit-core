@@ -44,6 +44,8 @@ abstract class BaseController extends Controller implements BaseControllerInterf
 
     protected $defaultName;
 
+    protected $routeName;
+
     protected $listDefaultViewName = [
         'index'     => '',
         'create'    => '',
@@ -139,7 +141,7 @@ abstract class BaseController extends Controller implements BaseControllerInterf
             $data = $data->toArray();
         }
 
-        return $this->responseAction($request, $data, 'created', route($this->getViewName(__FUNCTION__)), $this->getMessageResponse(__FUNCTION__));
+        return $this->responseAction($request, $data, 'created', $this->getRouteName(__FUNCTION__), $this->getMessageResponse(__FUNCTION__));
     }
 
     /**
@@ -172,7 +174,7 @@ abstract class BaseController extends Controller implements BaseControllerInterf
             $data = $data->toArray();
         }
 
-        return $this->responseAction($request, $data, 'updated', route($this->getViewName(__FUNCTION__), $id), $this->getMessageResponse(__FUNCTION__));
+        return $this->responseAction($request, $data, 'updated', $this->getRouteName(__FUNCTION__, $id), $this->getMessageResponse(__FUNCTION__));
     }
 
     /**
@@ -184,7 +186,7 @@ abstract class BaseController extends Controller implements BaseControllerInterf
     public function destroy($id) {
         $this->repository->delete($id);
 
-        return $this->response->deleted(request(), route($this->getViewName(__FUNCTION__), $id), $this->getMessageResponse(__FUNCTION__));
+        return $this->response->deleted(request(), $this->getRouteName(__FUNCTION__, $id), $this->getMessageResponse(__FUNCTION__));
     }
 
     /**
@@ -231,10 +233,20 @@ abstract class BaseController extends Controller implements BaseControllerInterf
         $this->validator->with($data)->passesOrFail($rules);
     }
 
+    public function setRouteName($value)
+    {
+        $this->routeName = $value;
+    }
+
     protected function getViewName($key)
     {
         $viewName = data_get($this->listDefaultViewName, $key, $this->defaultName.'.'.$key);
         return empty($viewName) ? $this->defaultName.'.'.$key : $viewName;
+    }
+
+    protected function getRouteName($key, $params = [])
+    {
+        return route($this->routeName.'.'.$key, $params);
     }
 
     private function getMessageResponse($key)

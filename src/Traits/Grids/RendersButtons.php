@@ -1,18 +1,22 @@
 <?php
 namespace Vnnit\Core\Traits\Grids;
 
+use Vnnit\Core\Facades\Common;
 use Vnnit\Core\Grids\GenericButton;
 
 trait RendersButtons
 {
     protected $buttons = [];
+    protected $exceptButtons = null;
 
-    protected $buttonsToGenerate = [
-        'create',
-        'edit',
-        'detail',
-        'delete',
-        'refresh'
+    protected $buttonsToGenerate = [];
+
+    private $actionsToButtonGenerate = [
+        'create' => 'add',
+        'edit' => 'edit',
+        'detail' => 'view',
+        'delete' => 'delete',
+        'refresh' => 'view'
     ];
 
     private function getConfigPrefix()
@@ -153,7 +157,7 @@ trait RendersButtons
             'position' => 2,
             'icon' => 'fa fa-info-circle',
             'title' => translate('table.btn_detail'),
-            'renderCustom' => "{$prefix}::tables.buttons.action_show",
+            // 'renderCustom' => "{$prefix}::tables.buttons.action_show",
             'url' => function($item) {
                 return $this->getDetailUrl(data_get($item, 'id'));
             },
@@ -187,13 +191,29 @@ trait RendersButtons
                 'trigger-confirm' => 1,
                 'confirmation-msg' => translate('table.action_question_delete'),
                 'method' => 'DELETE',
-                'pjax-target' => $this->getId()
+                'pjax-target' => '#'.$this->getId()
             ],
             'type' => GenericButton::TYPE_ROW,
             'visible' => function($item) {
                 return $this->visibleDelete($item);
             }
         ];
+    }
+
+    private function setDefaultButtonsToGenerate()
+    {
+        if (count($this->buttonsToGenerate) == 0) {
+            if (is_null($this->exceptButtons)) {
+                $this->exceptButtons = [];
+                $sectionCode = Common::getSectionCode();
+                foreach($this->actionsToButtonGenerate as $key => $action) {
+                    if (!user_can("{$action}_{$sectionCode}")) {
+                        array_push($this->exceptButtons, $key);
+                    }
+                }
+            }
+            $this->buttonsToGenerate = array_keys(array_except($this->actionsToButtonGenerate, $this->exceptButtons));
+        }
     }
 
     protected function visibleCreate()
