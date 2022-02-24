@@ -59,7 +59,7 @@ class CommonHelper
                     $menu->dropdown(data_get($item, 'title'), function ($subMenu) use ($childrens, $dropdownClass, $dropdown, $callback) {
                         $this->renderElementMenu($subMenu, $childrens, $dropdownClass, $dropdown, $callback);
                     }, null, array_merge([
-                        'class' => $class,
+                        'class' => implode(' ', [$class, data_get($item, 'class')]),
                         'icon' => data_get($item, 'icon'),
                         'id' => data_get($item, 'id'),
                         'active' => data_get($item, 'actived', false)
@@ -73,7 +73,7 @@ class CommonHelper
                     }
                     $menu->url($menu_link, data_get($item, 'title'),
                         array_merge([
-                            'class' => $class,
+                            'class' => implode(' ', [$class, data_get($item, 'class')]),
                             'icon' => data_get($item, 'icon'),
                             'id' => data_get($item, 'id'),
                             'active' => data_get($item, 'actived', false)
