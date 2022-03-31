@@ -1,0 +1,14 @@
+<?php
+
+namespace Modules\$MODULENAME$\Forms;
+
+use Vnnit\Core\Forms\Field;
+use Vnnit\Core\Forms\Form;
+use Vnnit\Core\Permissions\Role;
+
+class $CLASSNAME$Form extends Form
+{
+    public function buildForm()
+    {
+    }
+}

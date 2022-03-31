@@ -155,9 +155,9 @@ abstract class FormField
     protected function setDefaultOptions(array $options = [])
     {
         $this->options = $this->parent->mergeOptions($this->allDefaults(), $this->getDefaults());
-
-        $this->options = $this->parent->mergeOptions($this->options, $this->getAttributes($options));
-
+        
+        $this->options = array_merge_recursive_simple($this->options, $this->getAttributes($options));
+        
         $this->options = $this->parent->mergeOptions($this->options, $this->setupOptions($options));
 
         $this->setupAttrClass();

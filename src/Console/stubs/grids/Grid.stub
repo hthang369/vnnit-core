@@ -1,0 +1,24 @@
+<?php
+
+namespace Modules\$MODULENAME$\Grids;
+
+class $CLASSNAME$Grid extends BaseGrid
+{
+    /**
+     * The name of the grid
+     *
+     * @var string
+     */
+    protected $name = '$NAME$';
+
+    /**
+    * Set the columns to be displayed.
+    *
+    * @return void
+    * @throws \Exception if an error occurs during parsing of the data
+    */
+    public function setColumns()
+    {
+        return [];
+    }
+}

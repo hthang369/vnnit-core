@@ -10,9 +10,7 @@ class MapType extends FormField
 
     protected function getAttributes(array $options = [])
     {
-        return [
-            'attr' => ['class' => 'embed-responsive-item'],
-        ];
+        return $options;
     }
 
     /**
@@ -22,6 +20,6 @@ class MapType extends FormField
      */
     protected function getDefaults()
     {
-        return ['tag' => 'iframe'];
+        return ['tag' => 'iframe', 'attr' => ['class' => 'embed-responsive-item']];
     }
 }

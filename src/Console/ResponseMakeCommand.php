@@ -2,14 +2,13 @@
 
 namespace Vnnit\Core\Console;
 
-use Nwidart\Modules\Commands\GeneratorCommand;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
 use Nwidart\Modules\Traits\ModuleCommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class ResponseMakeCommand extends GeneratorCommand
+class ResponseMakeCommand extends BaseGeneratorCommand
 {
     use ModuleCommandTrait;
 
@@ -46,33 +45,25 @@ class ResponseMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    public function getDestinationFilePath($file_name = null)
+    public function getDestinationFilePath()
     {
         $path = $this->laravel['modules']->getModulePath($this->getModuleName());
 
-        $responsePath = GenerateConfigReader::read('response');
+        $responsePath = GenerateConfigReader::read('responses');
 
-        return $path . $responsePath->getPath() . '/' . $this->getResponseName($file_name) . '.php';
+        return $path . $responsePath->getPath() . '/' . $this->getResponseName() . '.php';
     }
 
     /**
      * @return string
      */
-    protected function getTemplateContents($file_name = null)
+    protected function getTemplateContents()
     {
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
             'MODULENAME'        => $module->getStudlyName(),
-            'CONTROLLERNAME'    => $this->getResponseName(),
-            'NAMESPACE'         => $module->getStudlyName(),
-            'CLASS_NAMESPACE'   => $this->getClassNamespace($module),
-            'CLASS'             => $this->getResponseNameWithoutNamespace(),
-            'LOWER_NAME'        => $module->getLowerName(),
-            'MODULE'            => $this->getModuleName(),
-            'NAME'              => $this->getModuleName(),
-            'STUDLY_NAME'       => $module->getStudlyName(),
-            'MODULE_NAMESPACE'  => $this->laravel['modules']->config('namespace'),
+            'CLASSNAME'         => $this->getResponseNameWithoutNamespace(),
         ]))->render();
     }
 
@@ -104,14 +95,7 @@ class ResponseMakeCommand extends GeneratorCommand
      */
     protected function getResponseName($file_name=null)
     {
-        $module_name = $this->getModuleName();
-
-        $response = empty($file_name)? studly_case($this->argument('name')) : $file_name;
-        if (empty($file_name) && str_contains(strtolower($response), 'response') === false) {
-            $response .= 'Response';
-        }
-
-        return $module_name.$response;
+        return $this->getClassFileName();
     }
 
     /**
@@ -124,7 +108,7 @@ class ResponseMakeCommand extends GeneratorCommand
 
     public function getDefaultNamespace() : string
     {
-        return $this->laravel['modules']->config('paths.generator.response.path', 'Responses');
+        return $this->laravel['modules']->config('paths.generator.responses.path', 'Responses');
     }
 
     /**

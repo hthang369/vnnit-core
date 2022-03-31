@@ -2,14 +2,13 @@
 
 namespace Vnnit\Core\Console;
 
-use Nwidart\Modules\Commands\GeneratorCommand;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
 use Nwidart\Modules\Traits\ModuleCommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class RepositoryMakeCommand extends GeneratorCommand
+class RepositoryMakeCommand extends BaseGeneratorCommand
 {
     use ModuleCommandTrait;
 
@@ -39,25 +38,25 @@ class RepositoryMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    public function getDestinationFilePath($file_name = null)
+    public function getDestinationFilePath()
     {
         $path = $this->laravel['modules']->getModulePath($this->getModuleName());
 
         $repositoryPath = GenerateConfigReader::read('repository');
 
-        return $path . $repositoryPath->getPath() . '/' . $this->getRepositoryName($file_name) . 'Repository.php';
+        return $path . $repositoryPath->getPath() . '/' . $this->getRepositoryName() . 'Repository.php';
     }
 
     /**
      * @return string
      */
-    protected function getTemplateContents($file_name = null)
+    protected function getTemplateContents()
     {
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
-        return (new Stub($this->getStubName($file_name), [
+        return (new Stub($this->getStubName(), [
             'CLASSNAME'         => $this->getRepositoryName(),
-            'MODULE'            => $this->getModuleName(),
+            'MODULENAME'        => $this->getModuleName(),
         ]))->render();
     }
 
@@ -89,13 +88,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      */
     protected function getRepositoryName($file_name = null)
     {
-        $repository = empty($file_name) ? studly_case($this->argument('name')) : $file_name;
-
-        // if (empty($file_name) && str_contains(strtolower($repository), 'repository') === false) {
-        //     $repository .= 'Repository';
-        // }
-
-        return $repository;
+        return $this->getClassFileName();
     }
 
     public function getDefaultNamespace(): string
@@ -107,7 +100,7 @@ class RepositoryMakeCommand extends GeneratorCommand
      * Get the stub file name based on the plain option
      * @return string
      */
-    private function getStubName($file_name)
+    private function getStubName()
     {
         return '/repositories/Repository.stub';
     }

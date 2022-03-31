@@ -8,7 +8,7 @@ use Nwidart\Modules\Traits\ModuleCommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class EntityMakeCommand extends BaseGeneratorCommand
+class FormMakeCommand extends BaseGeneratorCommand
 {
     use ModuleCommandTrait;
 
@@ -24,40 +24,39 @@ class EntityMakeCommand extends BaseGeneratorCommand
      *
      * @var string
      */
-    protected $name = 'module:make-entity';
+    protected $name = 'module:make-form';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate new entity for the specified module.';
+    protected $description = 'Generate new validator for the specified module.';
 
     /**
      * Get validator name.
      *
      * @return string
      */
-    public function getDestinationFilePath($file_name = null)
+    public function getDestinationFilePath()
     {
         $path = $this->laravel['modules']->getModulePath($this->getModuleName());
 
-        $validatorPath = GenerateConfigReader::read('model');
+        $validatorPath = GenerateConfigReader::read('forms');
 
-        return $path . $validatorPath->getPath() . '/' . $this->getEntityName($file_name) . 'Model.php';
+        return $path . $validatorPath->getPath() . '/' . $this->getFormName() . 'Form.php';
     }
 
     /**
      * @return string
      */
-    protected function getTemplateContents($file_name = null)
+    protected function getTemplateContents()
     {
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
-            'CLASSNAME'         => $this->getEntityName(),
+            'CLASSNAME'         => $this->getFormName(),
             'MODULENAME'        => $this->getModuleName(),
-            'LOWER_NAME'        => strtolower($this->getEntityName())
         ]))->render();
     }
 
@@ -69,7 +68,7 @@ class EntityMakeCommand extends BaseGeneratorCommand
     protected function getArguments()
     {
         return [
-            ['name', InputArgument::OPTIONAL, 'The name of the entity class.'],
+            ['name', InputArgument::OPTIONAL, 'The name of the validator class.'],
             ['module', InputArgument::OPTIONAL, 'The name of module will be used.'],
         ];
     }
@@ -80,29 +79,37 @@ class EntityMakeCommand extends BaseGeneratorCommand
     protected function getOptions()
     {
         return [
-            ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain entity', null],
+            ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain validator', null],
         ];
     }
 
     /**
      * @return array|string
      */
-    protected function getEntityName()
+    protected function getFormName()
     {
         return $this->getClassFileName();
     }
 
-    public function getDefaultNamespace() : string
+    /**
+     * @return array|string
+     */
+    private function getFormNameWithoutNamespace()
     {
-        return $this->laravel['modules']->config('paths.generator.model.path', 'Entities');
+        return class_basename($this->getFormName());
+    }
+
+    public function getDefaultNamespace(): string
+    {
+        return $this->laravel['modules']->config('paths.generator.forms.path', 'Forms');
     }
 
     /**
      * Get the stub file name based on the plain option
      * @return string
      */
-    private function getStubName($file_name = null)
+    private function getStubName()
     {
-        return '/entities/Model.stub';
+        return '/forms/Form.stub';
     }
 }

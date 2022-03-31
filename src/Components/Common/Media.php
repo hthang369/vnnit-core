@@ -21,7 +21,7 @@ class Media extends Component
         $excerpt = [],
         $body = [],
         $text = '',
-        $tag = ''
+        $tag = 'div'
     ) {
         $this->excerpt = $excerpt ?? [];
         $this->image = $image ?? [];

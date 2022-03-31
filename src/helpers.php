@@ -173,3 +173,76 @@ if (!function_exists('vnn_asset')) {
         return $pathImage;
     }
 }
+
+if (! function_exists('array_merge_recursive_simple')) {
+    function array_merge_recursive_simple(array &$array1, array $array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_string($key)) {
+                if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                    $merged[$key] = array_merge_recursive_simple($merged[$key], $value);
+                } else {
+                    $merged[$key] = $value;
+                }
+            } else {
+                $merged[] = $value;
+            }
+        }
+
+        return $merged;
+    }
+}
+
+if (!function_exists('laka_link_method')) {
+    function laka_link_method($method, $link, $title = null, $variant = null, $parameters = [], $attributes = [], $action = null, $sectionCode = null, $secure = null, $escape = true)
+    {
+        $icon = data_get($attributes, 'icon');
+        $content = $title;
+        if (!blank($icon)) {
+            $content = "<i class='fa {$icon} mr-1'></i>".$title;
+            $escape = false;
+        }
+        $variant = $variant ?? 'secondary';
+        $confirmMsg = data_get($attributes, 'data-confirmation-msg');
+        $classAttrs = array_unique(array_merge(['btn', "btn-{$variant}"], explode(' ', data_get($attributes, 'class', ''))));
+        $attributesNew = array_add(array_except($attributes, ['icon', 'class', 'data-confirmation-msg']), 'class', array_css_class($classAttrs));
+        if ($confirmMsg)
+            data_set($attributesNew, 'onclick', "return confirm('$confirmMsg')");
+
+        if (str_is($method, 'link'))
+            return app('html')->{$method}($link, $content, $attributesNew, $secure, $escape);
+
+        if (!blank($action) && !blank($sectionCode)) {
+            if (user_can("{$action}_{$sectionCode}")) {
+                return app('html')->{$method}($link, $content, $parameters, $attributesNew, $secure, $escape);
+            } else {
+                return '';
+            }
+        }
+
+        return app('html')->{$method}($link, $content, $parameters, $attributesNew, $secure, $escape);
+    }
+}
+
+if (!function_exists('bt_link_to')) {
+    function bt_link_to($url, $title = null, $variant = null, $attributes = [], $action = null, $sectionCode = null, $secure = null, $escape = true)
+    {
+        return laka_link_method('link', $url, $title, $variant, [], $attributes, $action, $sectionCode, $secure, $escape);
+    }
+}
+
+if (!function_exists('bt_link_to_route')) {
+    function bt_link_to_route($name, $title = null, $variant = null, $parameters = [], $attributes = [], $action = null, $sectionCode = null, $secure = null, $escape = true)
+    {
+        return laka_link_method('linkRoute', $name, $title, $variant, $parameters, $attributes, $action, $sectionCode, $secure, $escape);
+    }
+}
+
+if (!function_exists('bt_link_to_action')) {
+    function bt_link_to_action($action, $title = null, $variant = null, $parameters = [], $attributes = [], $actionName = null, $sectionCode = null, $secure = null, $escape = true)
+    {
+        return laka_link_method('linkAction', $action, $title, $variant, $parameters, $attributes, $actionName, $sectionCode, $secure, $escape);
+    }
+}

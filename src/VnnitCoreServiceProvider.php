@@ -3,8 +3,10 @@
 namespace Vnnit\Core;
 
 use Collective\Html\FormFacade as Form;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Vnnit\Core\Mixins\RouterMixin;
 use Vnnit\Core\Plugins\FileManager\LfmServiceProvider;
 use Vnnit\Core\Plugins\Widgets\WidgetServiceProvider;
 use Vnnit\Core\Support\CommonHelper;
@@ -45,6 +47,8 @@ class VnnitCoreServiceProvider extends BaseServiceProvider
         $this->loadHelperFile();
 
         $this->registerCommands();
+
+        Router::mixin(new RouterMixin);
 
         // $this->app->alias('Modal', ModalHelper::class);
 

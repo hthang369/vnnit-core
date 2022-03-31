@@ -10,8 +10,8 @@ class RepeatedType extends FormField
 
     protected function getAttributes(array $options = [])
     {
-        return [
-            'class' => 'form-control',
-        ];
+        return array_merge_recursive([
+            'class' => 'form-control'
+        ], $options);
     }
 }

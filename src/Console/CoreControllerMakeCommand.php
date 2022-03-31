@@ -60,7 +60,7 @@ class CoreControllerMakeCommand extends BaseGeneratorCommand
             'MODULENAME'        => $module->getStudlyName(),
             'CLASS_NAMESPACE'   => $this->getClassNamespace($module),
             'CLASS'             => $this->getControllerNameWithoutNamespace(),
-            'CLASS_NAME'        => $this->getArgumentName(),
+            'CLASSNAME'        => $this->getArgumentName(),
         ]))->render();
     }
 

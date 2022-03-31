@@ -24,9 +24,9 @@ class InputType extends FormField
 
     protected function getAttributes(array $options = [])
     {
-        return [
+        $default = [
             'label_show' => !str_is($this->type, Field::HIDDEN),
-            'attr' => array_merge(['class' => [$this->parent->getConfig('defaults.field_class')]], $options),
         ];
+        return array_merge_recursive($default, $options);
     }
 }

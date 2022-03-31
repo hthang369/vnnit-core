@@ -2,14 +2,13 @@
 
 namespace Vnnit\Core\Console;
 
-use Nwidart\Modules\Commands\GeneratorCommand;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
 use Nwidart\Modules\Traits\ModuleCommandTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class ValidatorMakeCommand extends GeneratorCommand
+class ValidatorMakeCommand extends BaseGeneratorCommand
 {
     use ModuleCommandTrait;
 
@@ -39,25 +38,25 @@ class ValidatorMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    public function getDestinationFilePath($file_name = null)
+    public function getDestinationFilePath()
     {
         $path = $this->laravel['modules']->getModulePath($this->getModuleName());
 
         $validatorPath = GenerateConfigReader::read('validator');
 
-        return $path . $validatorPath->getPath() . '/' . $this->getValidatorName($file_name) . 'Validator.php';
+        return $path . $validatorPath->getPath() . '/' . $this->getValidatorName() . 'Validator.php';
     }
 
     /**
      * @return string
      */
-    protected function getTemplateContents($file_name = null)
+    protected function getTemplateContents()
     {
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
             'CLASSNAME'         => $this->getValidatorName(),
-            'MODULE'            => $this->getModuleName(),
+            'MODULENAME'        => $this->getModuleName(),
         ]))->render();
     }
 
@@ -89,13 +88,7 @@ class ValidatorMakeCommand extends GeneratorCommand
      */
     protected function getValidatorName($file_name = null)
     {
-        $validator = empty($file_name) ? studly_case($this->argument('name')) : $file_name;
-
-        // if (empty($file_name) && str_contains(strtolower($validator), 'validator') === false) {
-        //     $validator .= 'Validator';
-        // }
-
-        return $validator;
+        return $this->getClassFileName();
     }
 
     /**

@@ -10,9 +10,7 @@ class StaticType extends FormField
 
     protected function getAttributes(array $options = [])
     {
-        return [
-            'attr' => ['class' => ['form-control-plaintext']],
-        ];
+        return $options;
     }
 
     /**
@@ -22,6 +20,6 @@ class StaticType extends FormField
      */
     protected function getDefaults()
     {
-        return ['tag' => 'div'];
+        return ['tag' => 'div', 'attr' => ['class' => ['form-control-plaintext']]];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\$MODULE$\Validators;
+namespace Modules\$MODULENAME$\Validators;
 
 use Vnnit\Core\Validators\BaseValidator;
 use \Prettus\Validator\Contracts\ValidatorInterface;
@@ -8,7 +8,7 @@ use \Prettus\Validator\Contracts\ValidatorInterface;
 /**
  * Class BaseValidator.
  *
- * @package namespace Modules\$MODULE$\Validators;
+ * @package namespace Modules\$MODULENAME$\Validators;
  */
 class $CLASSNAME$Validator extends BaseValidator
 {

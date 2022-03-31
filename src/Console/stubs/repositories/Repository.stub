@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\$MODULE$\Repositories;
+namespace Modules\$MODULENAME$\Repositories;
 
-use Modules\$MODULE$\Entities\$CLASSNAME$Model;
+use Modules\$MODULENAME$\Entities\$CLASSNAME$Model;
 use Vnnit\Core\Repositories\CoreRepository;
 
 class $CLASSNAME$Repository extends CoreRepository

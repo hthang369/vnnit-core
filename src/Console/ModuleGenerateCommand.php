@@ -4,6 +4,10 @@ namespace Vnnit\Core\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Nwidart\Modules\Contracts\ActivatorInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Vnnit\Core\Generators\ModuleGenerator;
 
 class ModuleGenerateCommand extends Command
 {
@@ -12,7 +16,7 @@ class ModuleGenerateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'module:generate {name} {module}';
+    protected $name = 'module:generate';
 
     /**
      * The console command description.
@@ -40,24 +44,67 @@ class ModuleGenerateCommand extends Command
     {
         $module = $this->argument('module');
         $name = $this->argument('name');
-        $this->call('module:make-core-controller', [
-            'name' => $name,
-            'module' => $module
-        ]);
 
-        $this->call('module:make-repository', [
-            'name' => $name,
-            'module' => $module
-        ]);
+        $moduleName = $module ?? $name;
+        $code = with(new ModuleGenerator($moduleName))
+            ->setFilesystem($this->laravel['files'])
+            ->setModule($this->laravel['modules'])
+            ->setConfig($this->laravel['config'])
+            ->setActivator($this->laravel[ActivatorInterface::class])
+            ->setConsole($this)
+            ->setForce($this->option('force'))
+            ->setType($this->getModuleType())
+            ->setActive(!$this->option('disabled'))
+            ->setCheckExists(is_null($module))
+            ->setModuleName($moduleName)
+            ->generate();
 
-        $this->call('module:make-validator', [
-            'name' => $name,
-            'module' => $module
-        ]);
+        return $code;
+    }
 
-        $this->call('module:make-entity', [
-            'name' => $name,
-            'module' => $module
-        ]);
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
+    {
+        return [
+            ['name', InputArgument::REQUIRED, 'The names of modules will be created.'],
+            ['module', InputArgument::OPTIONAL, 'The module name is already exists.'],
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain module (without some resources).'],
+            ['api', null, InputOption::VALUE_NONE, 'Generate an api module.'],
+            ['web', null, InputOption::VALUE_NONE, 'Generate a web module.'],
+            ['disabled', 'd', InputOption::VALUE_NONE, 'Do not enable the module at creation.'],
+            ['force', null, InputOption::VALUE_NONE, 'Force the operation to run when the module already exists.'],
+        ];
+    }
+
+    /**
+    * Get module type .
+    *
+    * @return string
+    */
+    private function getModuleType()
+    {
+        $isPlain = $this->option('plain');
+        $isApi = $this->option('api');
+
+        if ($isPlain && $isApi) {
+            return 'web';
+        }
+        if ($isPlain) {
+            return 'plain';
+        } elseif ($isApi) {
+            return 'api';
+        } else {
+            return 'web';
+        }
     }
 }
