@@ -16,7 +16,8 @@
     :sectionCode="$sectionCode"
     :items="data_get($data, 'rows')"
     :fields="data_get($data, 'fields')"
-    :pagination="data_get($data, 'paginator')">
+    :pagination="data_get($data, 'paginator')"
+    :except="$grid->getExcept()">
 </x-table>
 @push('scripts')
 <script>

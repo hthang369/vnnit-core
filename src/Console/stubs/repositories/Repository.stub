@@ -1,0 +1,20 @@
+<?php
+
+namespace Modules\$MODULE$\Repositories;
+
+use Modules\$MODULE$\Entities\$CLASSNAME$Model;
+use Vnnit\Core\Repositories\CoreRepository;
+
+class $CLASSNAME$Repository extends CoreRepository
+{
+    protected $presenterClass = $CLASSNAME$Grid::class;
+    /**
+     * Specify Model class name
+     *
+     * @return string
+     */
+    public function model()
+    {
+        return $CLASSNAME$Model::class;
+    }
+}

@@ -8,6 +8,6 @@
     @endif
 
     @if ($field->sortable && $isRowHeader)
-        <x-table-sort :field="$field->key" />
+        <x-table-sort :field="$field->key" :except="$except" />
     @endif
 </{{$tag}}>

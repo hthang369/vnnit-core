@@ -18,6 +18,7 @@ class Table extends Component
     public $stickyHeader;
     public $tableClass;
     public $isFilters;
+    public $except;
     /**
      * The component alias name.
      *
@@ -39,11 +40,13 @@ class Table extends Component
         $hover = false,
         $stickyHeader = null,
         $tableVariant = '',
-        $size = ''
+        $size = '',
+        $except = null
     )
     {
         $this->bordered = $bordered;
         $this->hover = $hover;
+        $this->except = $except;
         $this->tableClass = [
             'table',
             'table-bordered' => $this->bordered,

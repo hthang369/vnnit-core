@@ -3,7 +3,6 @@
 namespace Vnnit\Core\Plugins\Nestedset;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Query\Builder as Query;
@@ -11,8 +10,9 @@ use Illuminate\Database\Query\Builder as BaseQueryBuilder;
 use Illuminate\Support\Arr;
 use LogicException;
 use Illuminate\Database\Query\Expression;
+use Vnnit\Core\Entities\BaseBuilder;
 
-class QueryBuilder extends Builder
+class QueryBuilder extends BaseBuilder
 {
     /**
      * @var NodeTrait|Model

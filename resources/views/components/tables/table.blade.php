@@ -4,7 +4,7 @@
             <x-table-row scope="header">
                 @foreach ($fields as $field)
                     @continue(!$field->visible)
-                    <x-table-column :field="$field" :isHeader="true">
+                    <x-table-column :field="$field" :isHeader="true" :except="$except">
                         {!! $field->label !!}
                     </x-table-column>
                 @endforeach

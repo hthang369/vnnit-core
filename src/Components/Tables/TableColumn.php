@@ -19,18 +19,20 @@ class TableColumn extends Component
     public $cellData;
     public $isRowHeader;
     public $tableId;
+    public $except;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(DataColumn $field, $data = null, $isHeader = false, $tableId = '')
+    public function __construct(DataColumn $field, $data = null, $isHeader = false, $tableId = '', $except = null)
     {
         $this->field = $field;
         $this->cellData = $data;
         $this->isRowHeader = $isHeader;
         $this->tableId = $tableId;
+        $this->except = $except;
         $this->tag = $isHeader ? 'th' : 'td';
     }
 }

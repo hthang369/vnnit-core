@@ -59,6 +59,6 @@ class BaseServiceProvider extends ServiceProvider
                     return $command;
                 }
         }, File::allFiles($this->commandPath));
-        $this->commands($listCommands);
+        $this->commands(array_filter($listCommands));
     }
 }
