@@ -247,7 +247,7 @@ trait RendersButtons
     }
     protected function getRefreshUrl()
     {
-        return route($this->getSectionCode().'.index');
+        return route($this->getIndexRouteName());
     }
     protected function getEditUrl($params)
     {
