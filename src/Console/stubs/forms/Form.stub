@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\$MODULENAME$\Forms;
+namespace $MODULE_NAMESPACE$\Forms;
 
 use Vnnit\Core\Forms\Field;
 use Vnnit\Core\Forms\Form;

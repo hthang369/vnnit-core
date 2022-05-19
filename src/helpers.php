@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Vnnit\Core\Forms\Form;
 
 if (!function_exists('get_classes')) {
@@ -165,10 +166,18 @@ if (!function_exists('disk_total_info')) {
 }
 
 if (!function_exists('vnn_asset')) {
-    function vnn_asset($path) {
-        $pathImage = asset($path);
+    function vnn_asset($path, $secure = null) {
+        $assetPath = config('filesystems.disks.public.asset_path');
+        $pathImage = asset($assetPath.$path, $secure);
+        return $pathImage;
+    }
+}
+
+if (!function_exists('storage_asset')) {
+    function storage_asset($path, $secure = null) {
+        $pathImage = vnn_asset($path, $secure);
         if (!file_exists($pathImage)) {
-            $pathImage = asset(config('filesystems.disks.public.path_image').$path);
+            $pathImage = vnn_asset(config('filesystems.disks.public.path_image').$path, $secure);
         }
         return $pathImage;
     }
@@ -244,5 +253,17 @@ if (!function_exists('bt_link_to_action')) {
     function bt_link_to_action($action, $title = null, $variant = null, $parameters = [], $attributes = [], $actionName = null, $sectionCode = null, $secure = null, $escape = true)
     {
         return laka_link_method('linkAction', $action, $title, $variant, $parameters, $attributes, $actionName, $sectionCode, $secure, $escape);
+    }
+}
+
+if (!function_exists('convert_k_to_c')) {
+    function convert_k_to_c($number) {
+        return round($number - 273.15);
+    }
+}
+
+if (!function_exists('convert_f_to_c')) {
+    function convert_f_to_c($number) {
+        return round(($number - 32) / 1.8);
     }
 }

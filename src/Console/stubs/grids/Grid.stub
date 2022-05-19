@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\$MODULENAME$\Grids;
+namespace $MODULE_NAMESPACE$\Grids;
 
 class $CLASSNAME$Grid extends BaseGrid
 {

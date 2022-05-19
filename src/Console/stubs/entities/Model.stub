@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\$MODULENAME$\Entities;
+namespace $MODULE_NAMESPACE$\Entities;
 
 use Vnnit\Core\Entities\BaseModel;
 
@@ -8,8 +8,5 @@ class $CLASSNAME$Model extends BaseModel
 {
     protected $table = '$LOWER_NAME$';
 
-    protected $fillable = [
-        'name',
-        'age'
-    ];
+    protected $fillable = $FILLABLE$;
 }

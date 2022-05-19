@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\$MODULENAME$\Responses;
+namespace $MODULE_NAMESPACE$\Responses;
 
-use Modules\Core\Responses\BaseResponse;
+use Vnnit\Core\Responses\BaseResponse;
 
 class $CLASSNAME$Response extends BaseResponse
 {

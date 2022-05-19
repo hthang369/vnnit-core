@@ -1,9 +1,9 @@
 <?php
 
-namespace $CLASS_NAMESPACE$\Http\Controllers;
+namespace $MODULE_NAMESPACE$\Http\Controllers;
 
-use Modules\$MODULENAME$\Repositories\$CLASSNAME$Repository;
-use Modules\$MODULENAME$\Validators\$CLASSNAME$Validator;
+use $MODULE_NAMESPACE$\Repositories\$CLASSNAME$Repository;
+use $MODULE_NAMESPACE$\Validators\$CLASSNAME$Validator;
 use Vnnit\Core\Http\Controllers\CoreController;
 use Vnnit\Core\Responses\BaseResponse;
 

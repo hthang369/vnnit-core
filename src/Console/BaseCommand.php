@@ -1,107 +1,71 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Vnnit\Core\Console;
 
-use Laka\Core\Support\Stub;
-use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileExistsException;
+use Nwidart\Modules\Support\Config\GenerateConfigReader;
+use Nwidart\Modules\Support\Stub;
+use Symfony\Component\Console\Input\InputArgument;
 
-abstract class BaseCommand extends Command
+abstract class BaseCommand extends BaseGeneratorCommand
 {
     /**
-     * The name of 'name' argument.
-     *
      * @var string
      */
-    protected $argumentName = '';
+    protected $generatorName;
 
     /**
-     * Stub Path
-     *
-     * @var string
-     */
-    protected $stubPath;
-
-    /**
-     * Get template contents.
+     * Get controller name.
      *
      * @return string
      */
-    abstract protected function getTemplateContents();
+    public function getDestinationFilePath()
+    {
+        $path = $this->getDestinationPath();
+
+        $controllerPath = GenerateConfigReader::read($this->generatorName);
+
+        return $path . $controllerPath->getPath() . '/' . $this->getClassFileName() . '.php';
+    }
 
     /**
-     * Get the destination file path.
-     *
      * @return string
      */
-    abstract protected function getDestinationFilePath();
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function getTemplateContents()
     {
-        $path = str_replace('\\', '/', $this->getDestinationFilePath());
+        $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
-        $this->makeIsDirectory($path.DIRECTORY_SEPARATOR.$this->getFileName());
-
-        // Stub::setBasePath($this->getStubPath());
-
-        $tempaleStub = $this->getTemplateContents();
-
-        $this->fileGenerate($path, $this->getFileName(), $tempaleStub);
-    }
-
-    protected function makeIsDirectory($path)
-    {
-        if (!$this->laravel['files']->isDirectory($dir = dirname($path))) {
-            $this->laravel['files']->makeDirectory($dir, 0777, true);
-        }
+        return (new Stub($this->getStubName(), $this->getParameters($module)))->render();
     }
 
     /**
-     * File generate
+     * @return array
      */
-    public function fileGenerate($path, $file_name, $tempaleStub)
+    protected function getParameters($module)
     {
-        $fullPath = $path.DIRECTORY_SEPARATOR.$file_name;
-        try {
-            if (file_exists($fullPath)) {
-                throw new FileExistsException();
-            }
-
-            $tempaleStub->render();
-            $tempaleStub->saveTo($path, $file_name);
-
-            $this->info("Created : {$fullPath}");
-        } catch (FileExistsException $e) {
-            $this->error("File : {$fullPath} already exists.");
-        }
-
+        return [
+            'MODULE_NAMESPACE'   => $this->getClassNamespace($module),
+            'CLASS'             => $this->getClassNameWithoutNamespace(),
+            'CLASSNAME'        => $this->getArgumentName(),
+        ];
     }
 
-    protected function getArgumentName()
+    abstract protected function getStubName();
+
+    protected function getClassNameWithoutNamespace()
     {
-        return ucfirst($this->argument($this->argumentName));
+        return class_basename($this->getClassFileName());
     }
 
-    protected function getFileName()
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
+    protected function getArguments()
     {
-        return $this->getArgumentName().'.php';
-    }
-
-    protected function setStubPath($path)
-    {
-        $this->stubPath = $path;
-    }
-
-    protected function getStubPath()
-    {
-        return base_path($this->stubPath ?? 'app/Console/Commands/Stubs');
-    }
-
-    protected function getFileStub($fileName)
-    {
-        return DIRECTORY_SEPARATOR . $fileName . '.stub';
+        return [
+            ['name', InputArgument::OPTIONAL, 'The name of the validator class.'],
+            ['module', InputArgument::OPTIONAL, 'The name of module will be used.'],
+        ];
     }
 }

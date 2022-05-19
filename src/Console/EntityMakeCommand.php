@@ -2,23 +2,11 @@
 
 namespace Vnnit\Core\Console;
 
-use Nwidart\Modules\Support\Config\GenerateConfigReader;
-use Nwidart\Modules\Support\Stub;
-use Nwidart\Modules\Traits\ModuleCommandTrait;
-use Symfony\Component\Console\Input\InputArgument;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
-class EntityMakeCommand extends BaseGeneratorCommand
+class EntityMakeCommand extends BaseCommand
 {
-    use ModuleCommandTrait;
-
-    /**
-     * The name of argument being used.
-     *
-     * @var string
-     */
-    protected $argumentName = 'name';
-
     /**
      * The console command name.
      *
@@ -34,44 +22,84 @@ class EntityMakeCommand extends BaseGeneratorCommand
     protected $description = 'Generate new entity for the specified module.';
 
     /**
-     * Get validator name.
-     *
-     * @return string
+     * @var string
      */
-    public function getDestinationFilePath($file_name = null)
+    protected $className = 'Model';
+
+    /**
+     * @var string
+     */
+    protected $generatorName = 'model';
+
+    public function handle() : int
     {
-        $path = $this->laravel['modules']->getModulePath($this->getModuleName());
+        if (parent::handle() === E_ERROR) {
+            return E_ERROR;
+        }
 
-        $validatorPath = GenerateConfigReader::read('model');
+        $this->handleOptionalMigrationOption();
 
-        return $path . $validatorPath->getPath() . '/' . $this->getEntityName($file_name) . 'Model.php';
+        return 0;
     }
 
     /**
-     * @return string
-     */
-    protected function getTemplateContents($file_name = null)
-    {
-        $module = $this->laravel['modules']->findOrFail($this->getModuleName());
-
-        return (new Stub($this->getStubName(), [
-            'CLASSNAME'         => $this->getEntityName(),
-            'MODULENAME'        => $this->getModuleName(),
-            'LOWER_NAME'        => strtolower($this->getEntityName())
-        ]))->render();
-    }
-
-    /**
-     * Get the console command arguments.
-     *
      * @return array
      */
-    protected function getArguments()
+    protected function getParameters($module)
     {
-        return [
-            ['name', InputArgument::OPTIONAL, 'The name of the entity class.'],
-            ['module', InputArgument::OPTIONAL, 'The name of module will be used.'],
-        ];
+        return array_merge(parent::getParameters($module), [
+            'LOWER_NAME' => strtolower($this->getArgumentName()),
+            'FILLABLE' => $this->getFillable()
+        ]);
+    }
+
+    /**
+     * Create a proper migration name:
+     * ProductDetail: product_details
+     * Product: products
+     * @return string
+     */
+    private function createMigrationName()
+    {
+        $pieces = preg_split('/(?=[A-Z])/', $this->argument($this->argumentName), -1, PREG_SPLIT_NO_EMPTY);
+
+        $string = '';
+        foreach ($pieces as $i => $piece) {
+            if ($i+1 < count($pieces)) {
+                $string .= strtolower($piece) . '_';
+            } else {
+                $string .= Str::plural(strtolower($piece));
+            }
+        }
+
+        return $string;
+    }
+
+    /**
+     * Create the migration file with the given model if migration flag was used
+     */
+    private function handleOptionalMigrationOption()
+    {
+        if ($this->option('migration') === true) {
+            $migrationName = 'create_' . $this->createMigrationName() . '_table';
+            $this->call('module:make-migration', ['name' => $migrationName, 'module' => $this->argument('module')]);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getFillable()
+    {
+        $fillable = $this->option('fillable');
+
+        if (!is_null($fillable)) {
+            $arrays = explode(',', $fillable);
+
+            return json_encode($arrays);
+        }
+
+        return '[]';
     }
 
     /**
@@ -80,29 +108,17 @@ class EntityMakeCommand extends BaseGeneratorCommand
     protected function getOptions()
     {
         return [
-            ['plain', 'p', InputOption::VALUE_NONE, 'Generate a plain entity', null],
+            ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
+            ['migration', 'm', InputOption::VALUE_NONE, 'Flag to create associated migrations', null],
         ];
-    }
-
-    /**
-     * @return array|string
-     */
-    protected function getEntityName()
-    {
-        return $this->getClassFileName();
-    }
-
-    public function getDefaultNamespace() : string
-    {
-        return $this->laravel['modules']->config('paths.generator.model.path', 'Entities');
     }
 
     /**
      * Get the stub file name based on the plain option
      * @return string
      */
-    private function getStubName($file_name = null)
+    protected function getStubName()
     {
-        return '/entities/Model.stub';
+        return '/entities/model.stub';
     }
 }

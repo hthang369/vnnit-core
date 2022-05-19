@@ -1,0 +1,19 @@
+<?php
+
+namespace $MODULE_NAMESPACE$\Repositories\FilterQueryString\Filters;
+
+use Illuminate\Database\Eloquent\Builder;
+
+class Where$CLASSNAME$Clause extends BaseClause 
+{
+    protected function apply($query): Builder
+    {
+        $query->where($this->column, $this->values);
+
+        return $query;
+    }
+
+    protected function validate($value): bool {
+        return !is_null($value);
+    }
+}
